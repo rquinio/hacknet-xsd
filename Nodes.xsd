@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hacknet-os.com/Nodes"
+  xmlns:tns="http://hacknet-os.com/Nodes" elementFormDefault="qualified">
+  <xs:element name="Computer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="adminPass" type="tns:adminPassType" maxOccurs="1" minOccurs="0" />
+        <xs:element name="account" type="tns:accountType" maxOccurs="unbounded" minOccurs="0" >
+          <xs:annotation>
+            <xs:documentation>Adds an account to this computer</xs:documentation></xs:annotation></xs:element>
+        <xs:element name="ports" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>By default: 80, 25, 21, 22</xs:documentation>
+          </xs:annotation></xs:element>
+        <xs:element name="proxy" type="tns:proxyType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Proxy server. Set value to -1 to make it disappear</xs:documentation></xs:annotation></xs:element>
+        <xs:element name="portsForCrack" type="tns:portsForCrackType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Number of ports to be open to allow porthack to run. If absent, the default is 0.</xs:documentation>
+          </xs:annotation></xs:element>
+        <xs:element name="firewall" type="tns:firewallType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Adds a firewall.</xs:documentation>
+          </xs:annotation></xs:element>
+        <xs:element name="trace" type="tns:traceType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Adds a trace timer</xs:documentation>
+          </xs:annotation></xs:element>
+        <xs:element name="admin" type="tns:adminType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="portRemap" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation> Remaps the port from the defined default value to whatever you want.
+Ex: web=1234,22=2
+The left hand side is the default/original value or it's nickname.
+Supported names: ssh, ftp, web, torrent, medical, smtp, sql</xs:documentation>
+          </xs:annotation></xs:element>
+        <xs:element name="dlink" type="tns:dlinkType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Links this computer to another (one way) - if you scan from it, it reveals the links</xs:documentation>
+          </xs:annotation></xs:element>
+        <xs:element name="positionNear" type="tns:positionNearType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="file" type="tns:fileType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Creates a file at /path/name</xs:documentation>
+          </xs:annotation></xs:element>
+        <xs:element name="customthemefile" type="tns:customthemefileType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="encryptedFile" type="tns:encryptedFileType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="mailServer" type="tns:mailServerType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="eosDevice" type="tns:eosDeviceType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="uploadServerDaemon" type="tns:uploadServerDaemonType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="addWebServer" type="tns:addWebServerType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="deathRowDatabase" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="academicDatabase" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="ispSystem" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="messageBoard" type="tns:messageBoardType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="MedicalDatabase" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="HeartMonitor" type="tns:HeartMonitorType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="PointClicker" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="SongChangerDaemon" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="variableMissionListingServer" type="tns:variableMissionListingServerType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="missionHubServer" type="tns:missionHubServerType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="memoryDumpFile" type="tns:memoryDumpFileType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="Memory" type="tns:MemoryType" maxOccurs="1" minOccurs="0"></xs:element>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation>Unique ID of the computer.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="name" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation>Name of the computer on the netMap</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ip">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:pattern value="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"></xs:pattern>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="security">
+        <xs:annotation>
+          <xs:documentation>Number from 0 to 5 that represents how hard it is to hack
+            From 1-4 it will need that many
+            ports to open, 4 and above will automatically add other security to scale it up
+            easily, you can overwrite
+            specifics below (recommended)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"></xs:minInclusive>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="allowsDefaultBootModule" type="xs:boolean" default="true" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether when you connect to a node it will automatically launch it's program (the last
+            daemon defined in this file) and put it up on the display module.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="icon" use="optional">
+        <xs:annotation>
+          <xs:documentation>Not including this uses the default set by security level</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="laptop"></xs:enumeration>
+            <xs:enumeration value="chip"></xs:enumeration>
+            <xs:enumeration value="kellis"></xs:enumeration>
+            <xs:enumeration value="tablet"></xs:enumeration>
+            <xs:enumeration value="ePhone"></xs:enumeration>
+            <xs:enumeration value="ePhone2"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="type">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1"></xs:enumeration>
+            <xs:enumeration value="2"></xs:enumeration>
+            <xs:enumeration value="3"></xs:enumeration>
+            <xs:enumeration value="4"></xs:enumeration>
+            <xs:enumeration value="corporate"></xs:enumeration>
+            <xs:enumeration value="home"></xs:enumeration>
+            <xs:enumeration value="server"></xs:enumeration>
+            <xs:enumeration value="empty"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="accountType">
+    <xs:attribute name="username" type="xs:string" use="required"></xs:attribute>
+    <xs:attribute name="password" type="xs:string"></xs:attribute>
+    <xs:attribute name="type">
+      <xs:annotation>
+        <xs:documentation>Priviledge of the account:
+          ADMIN = 0;
+          ALL = 1;
+          MAIL = 2;
+          MISSIONLIST = 3;
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:int">
+          <xs:enumeration value="0"></xs:enumeration>
+          <xs:enumeration value="1"></xs:enumeration>
+          <xs:enumeration value="2"></xs:enumeration>
+          <xs:enumeration value="3"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="adminPassType">
+    <xs:attribute name="pass" type="xs:string" use="required"></xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="firewallType">
+    <xs:attribute name="level" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Set level to -1 to remove it.</xs:documentation>
+      </xs:annotation></xs:attribute>
+    <xs:attribute name="solution" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Solution is the solution the player will need to find to break it,  the level should ideally be equal to the solution length, but can be longer  (Not shorter though!) </xs:documentation>
+      </xs:annotation></xs:attribute>
+    <xs:attribute name="additionalTime" type="xs:float">
+      <xs:annotation>
+        <xs:documentation>nonstandard extra evaluation time per step that the Hacknet solver will need</xs:documentation>
+      </xs:annotation></xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="traceType">
+      <xs:attribute name="time" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Set to -1 to remove</xs:documentation>
+        </xs:annotation></xs:attribute>
+    </xs:complexType>
+
+  <xs:complexType name="proxyType">
+    <xs:attribute name="time" type="xs:int"></xs:attribute>
+  </xs:complexType>
+  
+    <xs:complexType name="adminType">
+        <xs:annotation>
+          <xs:documentation>Auto-administrator adder - this resets the ports and stuff when the player disconnects</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="type">
+            <xs:annotation>
+              <xs:documentation>- basic only resets after 15 seconds or so.
+- progress admins reset ports, firewall and proxy progress, but only if the player isn't the admin.
+</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="fast"></xs:enumeration>
+            <xs:enumeration value="basic"></xs:enumeration>
+            <xs:enumeration value="progress"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="resetPassword" type="xs:boolean"></xs:attribute>
+      <xs:attribute name="isSuper" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Super admins reset passwords instantly on fast mode</xs:documentation>
+        </xs:annotation></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="dlinkType">
+      <xs:attribute name="target" type="xs:string"></xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="positionNearType">
+      <xs:attribute name="target" type="xs:string"></xs:attribute>
+      <xs:attribute name="position" type="xs:float"></xs:attribute>
+      <xs:attribute name="total" type="xs:int"></xs:attribute>
+      <xs:attribute name="extraDistance" type="xs:float"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="fileType">
+        <xs:annotation>
+          <xs:documentation>Executables:
+#SSH_CRACK#
+#FTP_CRACK#
+#WEB_CRACK#
+#SMTP_CRACK#
+#SQL_CRACK#
+#HEXCLOCK_EXE#
+#CLOCK_PROGRAM#
+#DECYPHER_PROGRAM#
+#DECHEAD_PROGRAM#
+#MEDICAL_PROGRAM#
+
+Themes:
+#WHITE_THEME#
+#GREEN_THEME#
+#YELLOW_THEME#
+#TEAL_THEME#
+#BASE_THEME#
+#PURPLE_THEME#
+#MINT_THEME#
+
+Misc:
+#PACEMAKER_FW_WORKING#
+#PACEMAKER_FW_DANGER#
+</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="path" type="xs:string"></xs:attribute>
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+       </xs:extension>
+    </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="encryptedFileType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+      <xs:attribute name="path" type="xs:string"></xs:attribute>
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="extension" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Original file extension (.txt, ...) Note: will only work if file name ends with .dec extension.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ip" type="xs:string"></xs:attribute>
+      <xs:attribute name="header" type="xs:string"></xs:attribute>
+      <xs:attribute name="pass" type="xs:string"></xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="customthemefileType">
+      <xs:attribute name="path" type="xs:string"></xs:attribute>
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="themePath" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="MemoryType">
+      <xs:all>
+        <xs:element name="Commands" type="tns:CommandsType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="Data" type="tns:DataType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="Images" type="tns:ImagesType" maxOccurs="1" minOccurs="0"></xs:element>
+      </xs:all>
+    </xs:complexType>
+    
+    <xs:complexType name="memoryDumpFileType">
+      <xs:sequence>
+        <xs:element name="Memory" type="tns:MemoryType"></xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="path" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="ImagesType">
+      <xs:sequence>
+        <xs:element name="Image" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="DataType">
+      <xs:sequence>
+        <xs:element name="Block" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="CommandsType">
+      <xs:sequence>
+        <xs:element name="Command" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="variableMissionListingServerType">
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="iconPath" type="xs:string"></xs:attribute>
+      <xs:attribute name="articleFolderPath" type="xs:string"></xs:attribute>
+      <xs:attribute name="color" type="xs:string"></xs:attribute>
+      <xs:attribute name="assigner" type="xs:boolean"></xs:attribute>
+      <xs:attribute name="public" type="xs:boolean"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="missionHubServerType">
+      <xs:attribute name="groupName" type="xs:string"></xs:attribute>
+      <xs:attribute name="serviceName" type="xs:string"></xs:attribute>
+      <xs:attribute name="missionFolderPath" type="xs:string"></xs:attribute>
+      <xs:attribute name="themeColor" type="xs:string"></xs:attribute>
+      <xs:attribute name="lineColor" type="xs:string"></xs:attribute>
+      <xs:attribute name="backgroundColor" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="HeartMonitorType">
+      <xs:attribute name="patient" type="xs:string"></xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="messageBoardType">
+      <xs:sequence>
+        <xs:element name="thread" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="uploadServerDaemonType">
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="folder" type="xs:string"></xs:attribute>
+      <xs:attribute name="needsAuth" type="xs:boolean"></xs:attribute>
+      <xs:attribute name="color" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="addWebServerType">
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="url" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="eosDeviceType">
+      <xs:sequence>
+        <xs:element name="note" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="mail" type="tns:mailType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="file" type="tns:fileType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="id" type="xs:string"></xs:attribute>
+      <xs:attribute name="icon" type="xs:string"></xs:attribute>
+      <xs:attribute name="passOverride" type="xs:string"></xs:attribute>
+      <xs:attribute name="empty" type="xs:boolean"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="mailServerType">
+      <xs:sequence>
+        <xs:element name="email" type="tns:emailType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="color" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="mailType">
+      <xs:attribute name="username" type="xs:string"></xs:attribute>
+      <xs:attribute name="pass" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="emailType">
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="recipient" type="xs:string"></xs:attribute>
+          <xs:attribute name="sender" type="xs:string"></xs:attribute>
+          <xs:attribute name="subject" type="xs:string"></xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="portsForCrackType">
+      <xs:attribute name="val" type="xs:int" default="0"></xs:attribute>
+    </xs:complexType>
+</xs:schema>

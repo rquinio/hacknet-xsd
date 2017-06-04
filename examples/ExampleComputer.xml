@@ -1,0 +1,265 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<Computer xmlns="http://hacknet-os.com/Nodes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hacknet-os.com/Nodes ../Nodes.xsd" id="advExamplePC" 
+          name="Extension Example PC" 
+          ip="167.194.132.7"
+          security="2"
+          allowsDefaultBootModule="false"
+          icon="chip" 
+          type="1"> 
+          
+          <!-- 1=  corporate, 2 = Home, 3 = server 4 = empty -->
+  <!-- icon:  not including this uses the default set by security level:
+  laptop
+  chip
+  kellis
+  tablet
+  ePhone
+  ePhone2-->
+  
+  <!-- 
+  Security is a number from 0 to 5 that represents how hard it is to hack
+  From 1-4 it will need that many ports to open, 4 and above will automatically
+  add other security to scale it up easily, you can overwrite specifics below (recommended)
+  
+  AllowsDefaultBootModule is default to true and means that when you connect to a node
+  it will automatically launch it's program (the last daemon defined in this file) and
+  put it up on the display module.
+  Because this example computer shows off a lot of stuff, I've set this to false here.
+  -->
+
+  <!-- Accounts -->
+  <adminPass pass="password" />
+  <account username="Matt" password="testpass" type="1" />
+  <!-- Adds an account to this computer.
+  Type represents it's privileges :
+  ADMIN = 0;
+  ALL = 1;
+  MAIL = 2;
+  MISSIONLIST = 3;
+  -->
+  <account username="mailGuy" password="mailPass" type="2" /> <!-- Make accounts for the mail server like this -->
+  
+  <!-- Security Stuff -->
+  <ports>80, 22</ports>
+  <proxy time="2" /> <!-- Proxy server. Set value to -1 to make it disappear -->
+  <portsForCrack val="2" /> <!-- Number of ports to be open to allow porthack to run -->
+  <firewall level="6" solution="Scypio" additionalTime="1.0"/>
+  <!-- Adds a firewall - set level to -1 to remove it.
+      Solution is the solution the player will need to find to break it, 
+      the level should ideally be equal to the solution length, but can be longer
+      (Not shorter though!) - additional time is the nonstandard extra evaluation time
+      per step that the Hacknet solver will need-->
+  <trace time="300" /> <!-- Adds a trace timer - set to -1 to remove -->
+  <admin type="fast" resetPassword="false" isSuper="false"/> 
+  <!-- Auto-administrator adder - this resets the ports and stuff when the player
+  disconnects. Available types are "basic", "progress" and "fast" - basic only resets after 
+  15 seconds or so.
+  Progress admins reset ports, firewall and proxy progress, but only if the player isn't the admin.
+  Super admins reset passwords instantly on fast mode
+  -->
+
+  <!-- Remaps the port from the defined default value to whatever you want.
+  The left hand side is the default/original value or it's nickname.
+  Supported names: ssh, ftp, web, torrent, medical, smtp, sql-->
+  <portRemap>web=1234,22=2</portRemap>
+  
+  <!-- Network Stuff -->
+  <dlink target="advExamplePC2" /> <!-- This links this computer to another (one way) - if you scan from it it reveals the links -->
+  
+  <positionNear target="advExamplePC2" position="1" total="3" extraDistance="0.1"/>
+  <!-- This positions this computer near the target on the network map
+       Position is it's position radially around it, and total is the 
+       number of radially surrounding nodes it has - this way you can create
+       cool looking networks
+       
+       ExtraDistance should be between -0.6 and 0.3 - anything bigger will seem really far away, and can cause problems.
+       0.1 is a good distance.
+       -->
+  
+  
+  
+  <!-- Files -->
+  <file path="home" name="Test_File">This is a test file in the home directory</file>
+  <file path="bin" name="Binary_File">#BINARY#</file>
+  <file path="home/NewDirectory" name="Test_File">
+This is a longer file that also creates a new directory by adding something to path
+
+    #BINARY#
+    This generates some binary (2000 chars of it)
+    
+    #BINARYSMALL#
+    This generates some binary (1000 chars of it)
+
+    #PLAYER_IP#
+    Becomes the IP of the player's computer
+
+    #PLAYERNAME#
+    the above string converts itself into the player's name
+
+    test test
+  </file>
+  <file path="bin" name="SSHCrack.exe">#SSH_CRACK#</file>
+  <file path="bin" name="FTPBounce.exe">#FTP_CRACK#</file>
+  <file path="bin" name="WebServerWorm.exe">#WEB_CRACK#</file>
+  <file path="bin" name="SMTPOverflow.exe">#SMTP_CRACK#</file>
+  <file path="bin" name="SQLBufferOverflow.exe">#SQL_CRACK#</file>
+  <file path="bin" name="HexClock.exe">#HEXCLOCK_EXE#</file>
+  <file path="bin" name="Clock.exe">#CLOCK_PROGRAM#</file>
+  <file path="bin" name="Decypher.exe">#DECYPHER_PROGRAM#</file>
+  <file path="bin" name="DECHead.exe">#DECHEAD_PROGRAM#</file>
+  <file path="bin" name="KBTPortTest.exe">#MEDICAL_PROGRAM#</file>
+
+  <!-- Themes -->
+  <file path="sys" name="White-Theme.sys">#WHITE_THEME#</file>
+  <file path="sys" name="Green-Theme.sys">#GREEN_THEME#</file>
+  <file path="sys" name="Yellow-Theme.sys">#YELLOW_THEME#</file>
+  <file path="sys" name="Teal-Theme.sys">#TEAL_THEME#</file>
+  <file path="sys" name="Base-Theme.sys">#BASE_THEME#</file>
+  <file path="sys" name="LE-Theme.sys">#PURPLE_THEME#</file>
+  <file path="sys" name="Mint-Theme.sys">#MINT_THEME#</file>
+  
+  <!--Misc-->
+  <file path="home" name="PacemakerFirmwareWorking.dll">#PACEMAKER_FW_WORKING#</file>
+  <file path="home" name="PacemakerFirmwareDanger.dll">#PACEMAKER_FW_DANGER#</file>
+
+  <!-- Custom Theme Files -->
+  <customthemefile path="sys" name="Custom_x-server.sys" themePath="Themes/TestTheme2.xml"/>
+  
+  <encryptedFile path="home" name="encrypted_File.dec" extension=".txt" ip="192.168.1.1" header="This is the header" pass="decryptionPassword">
+    This generates an encrypted file that can be decrypted using the password above
+  </encryptedFile>
+
+  <encryptedFile path="home" name="easy_encrypted_File.dec" ip="192.168.1.1" header="This is the header">
+    By simply not providing a password like this one, it can be decrypted without a password
+  </encryptedFile>
+  
+  <!-- Daemons -->
+  <!-- These are the "programs" running on nodes that do things
+  It's unlikely you'll be able to use most of these since you cant change their code
+  but here are a few of them that might work-->
+
+  <mailServer name="Example Mail Server" color="50,237,212">
+    <email recipient="mailGuy" sender="Sender Guy" subject="Adding an email!">
+This is how you add emails to the mail server - logging in with someone's account
+will show these just like the way the player gets emails.
+    </email>
+    <email recipient="mailGuy" sender="Spam" subject="amazing features">
+You can have as many of these as you want
+    </email>
+    <email recipient="Matt" sender="Spam" subject="amazing features">
+Different users too
+    </email>
+  </mailServer>
+
+  <!-- Adding this section will create a second computer on load, attached to this
+  which is an eos device, all set up, with these files on it.
+  It'll also automatically generate some apps and save files and things
+  for flavor.-->
+  <eosDevice name="Deliliah's ePhone 4S" id="eosIntroPhone" icon="ePhone2" empty="true" passOverride="notAlpine">
+    <note>TestNote
+More text</note>
+    <note>Note filenames
+Note filenames are generated automatically by taking the first line of the file
+(in this case "Note Filenames") and replacing spaces with underscores.</note>
+    <mail username="test@jmail.com" pass="thisIstheaccountpass" />
+    <mail username="test2@jmail.com" pass="YouCanHaveLotsOfThese" />
+    <file path="eos/test" name="crackedFile.txt">This is mostly useful for jailbroken phones</file>
+  </eosDevice>
+
+  <!--
+  <addOnlineWebServer name="Reddit" url="http://www.reddit.com" />
+  -->
+  <!-- This adds a real-world website reflection. You can only have one web server
+  per computer though, so this one wont have it.-->
+
+  <uploadServerDaemon name="Upload Dropbox" folder="Drop" 
+                      needsAuth="false" color="204,116,212"/>
+  <!-- This is a special sort of server that allows you to upload files to it 
+       without admin permissions -->
+  <addWebServer name="Website Server"
+                url="Content/Web/Presets/Nortron/NortronPublicPage.html" />
+  <!-- Web servers are added like this - you can add your own web pages to the web presets
+  folder and have them show up in-game too! it renders proper html and everything (though
+  it doesn't accept input yet).
+  This is still a work in progress for mod support.-->
+
+  <!-- Death row database loads a pre-set collection of records -->
+  <deathRowDatabase />
+
+  <academicDatabase />
+
+  <ispSystem />
+
+  <!-- /el style message board.  -->
+  <messageBoard name="Custom Board Name!">
+    <thread>Nodes/MessageBoardThreads/ExampleThread1.txt</thread>
+    <thread>Nodes/MessageBoardThreads/ExampleThread2.txt</thread>
+  </messageBoard>
+
+
+  <MedicalDatabase />
+
+  <!-- patient is the person ID - their firstname initial underscore, then their last name-->
+  <HeartMonitor patient="J_Stalvern"/>
+
+  <PointClicker />
+
+  <SongChangerDaemon />
+
+  <variableMissionListingServer name="example listing server" iconPath="Logo.png" articleFolderPath="Nodes/ListingServerArticles" color="120,200,2" assigner="false" public="true"/>
+
+  <missionHubServer groupName="ExTech" serviceName="Example Tech Contract Hub" missionFolderPath="Missions/MissionHubMissions" themeColor="200,10,10" lineColor="255,80,80" backgroundColor="20,20,20" />
+  
+  <memoryDumpFile name="testDump.md" path="home">
+    <Memory>
+      <Data>
+        <Block>test string one</Block>
+        <Block>test string two</Block>
+      </Data>
+      <Commands>
+        <Command>connect 123.123.123.123</Command>
+      </Commands>
+      <Data>
+        <Block>1234432</Block>
+        <Block>gfdgfdgdf</Block>
+        <Block>asdf</Block>
+      </Data>
+    </Memory>
+  </memoryDumpFile>
+  
+  <Memory>
+    <Commands>
+      <Command>cd /log</Command>
+      <Command>rm *.log</Command>
+      <Command>cd /log</Command>
+      <Command>rm *.log</Command>
+      <Command>cd /log</Command>
+      <Command>rm *.log</Command>
+      <Command>cd /log</Command>
+      <Command>rm *.log</Command>
+    </Commands>
+    <Data>
+      <Block>This appears in the "files" section</Block>
+      <Block>more
+and longer, multi line notes!
+!
+asdf</Block>
+    </Data>
+    <Images>
+      <Image>DLC/Sprites/Misc/DraculaTank</Image>
+    </Images>
+  </Memory>
+
+  <customthemefile path="home/themes" name="starfield_x-server.sys" themePath="DLC/Themes/MiamiTheme.xml"/>
+  
+  <!-- Bonus -->
+  <!--
+  <ExternalCounterpart id="testEP" name="External Counterpart Demo" />
+  -->
+  <!-- This adds a real-world external counterpart to this virtualized computer
+  If you have a hacknet session running server mode and add it's id and ip to Content/Network/NetworkIPList.txt
+  then add it's external counterpart here, it'll function as a real world server when you do stuff
+  to this one - the most obvious thing to do is open CD trays and stuff.
+  -->
+  
+</Computer>
