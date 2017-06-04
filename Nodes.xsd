@@ -2,66 +2,278 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hacknet-os.com/Nodes"
   xmlns:tns="http://hacknet-os.com/Nodes" elementFormDefault="qualified">
   <xs:element name="Computer">
-    <xs:complexType>
+        <xs:annotation>
+          <xs:documentation>Computers are defined by:
+- Security (accounts, ports, ...)
+- Files
+- Daemons, that are the "programs" running on nodes that do things.
+
+It's generally best practice to only use a single daemon per node, but it does support as many as you like (last one defined is the "default" one that shows up)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
       <xs:sequence>
-        <xs:element name="adminPass" type="tns:adminPassType" maxOccurs="1" minOccurs="0" />
-        <xs:element name="account" type="tns:accountType" maxOccurs="unbounded" minOccurs="0" >
+        <xs:element name="adminPass" type="tns:adminPassType" maxOccurs="1" minOccurs="0">
           <xs:annotation>
-            <xs:documentation>Adds an account to this computer</xs:documentation></xs:annotation></xs:element>
+            <xs:documentation>Sets the admin password for this computer.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="account" type="tns:accountType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Adds an account to this computer</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="ports" type="xs:string" maxOccurs="1" minOccurs="0">
           <xs:annotation>
-            <xs:documentation>By default: 80, 25, 21, 22</xs:documentation>
-          </xs:annotation></xs:element>
+            <xs:documentation>
+              List of open ports on the computer. Valid Ports: 21, 22, 25, 80, 1433, 104, 6881, 443, 192 By default: 80,
+              25, 21, 22
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="proxy" type="tns:proxyType" maxOccurs="1" minOccurs="0">
           <xs:annotation>
-            <xs:documentation>Proxy server. Set value to -1 to make it disappear</xs:documentation></xs:annotation></xs:element>
+            <xs:documentation>Proxy server. Set value to -1 to make it disappear</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="portsForCrack" type="tns:portsForCrackType" maxOccurs="1" minOccurs="0">
           <xs:annotation>
-            <xs:documentation>Number of ports to be open to allow porthack to run. If absent, the default is 0.</xs:documentation>
-          </xs:annotation></xs:element>
+            <xs:documentation>
+              Number of ports that need to be opened to allow porthack to run. If absent, the default is 0. If this is
+              set to be over 100, the computer will display the "INVIOLABILITY ERROR" message.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="firewall" type="tns:firewallType" maxOccurs="1" minOccurs="0">
           <xs:annotation>
             <xs:documentation>Adds a firewall.</xs:documentation>
-          </xs:annotation></xs:element>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="trace" type="tns:traceType" maxOccurs="1" minOccurs="0">
           <xs:annotation>
             <xs:documentation>Adds a trace timer</xs:documentation>
-          </xs:annotation></xs:element>
-        <xs:element name="admin" type="tns:adminType" maxOccurs="1" minOccurs="0"></xs:element>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="admin" type="tns:adminType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Auto-administrator adder - this resets the ports and stuff when the player disconnects
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="portRemap" type="xs:string" maxOccurs="1" minOccurs="0">
           <xs:annotation>
-            <xs:documentation> Remaps the port from the defined default value to whatever you want.
-Ex: web=1234,22=2
-The left hand side is the default/original value or it's nickname.
-Supported names: ssh, ftp, web, torrent, medical, smtp, sql</xs:documentation>
-          </xs:annotation></xs:element>
+            <xs:documentation>
+              Remaps the port from the defined default value to whatever you want. Ex: web=1234,22=2 The left hand side
+              is the default/original value or it's name.
+
+              Supported names: ssh, ftp, web, torrent, medical, smtp, sql
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="tracker" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              The tracker is the 'passive trace' - if this tag is here, after a player disconnects from this machine if
+              they have left logs downloading or deleting a file, they will be attacked by an auto-generated AI hacker
+              that will try and reset them, or make them do the ETAS if the player has the flag:
+              &amp;quot;CSEC_Member&amp;quot;
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="dlink" type="tns:dlinkType" maxOccurs="unbounded" minOccurs="0">
           <xs:annotation>
-            <xs:documentation>Links this computer to another (one way) - if you scan from it, it reveals the links</xs:documentation>
-          </xs:annotation></xs:element>
-        <xs:element name="positionNear" type="tns:positionNearType" maxOccurs="1" minOccurs="0"></xs:element>
+            <xs:documentation>
+              Links this computer to another (one way) - if you scan from it, it reveals the links
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="positionNear" type="tns:positionNearType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Positions this computer near the target on the network map, to create cool looking networks
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="file" type="tns:fileType" maxOccurs="unbounded" minOccurs="0">
           <xs:annotation>
-            <xs:documentation>Creates a file at /path/name</xs:documentation>
-          </xs:annotation></xs:element>
+            <xs:documentation>
+              Creates a file at /path/name.
+
+              Some wildcards (#ALLCAPS_WITH_HASHES_AROUND_THEM#) get auto-replaced at load-time with specific content:
+              #BINARY# (2000 chars of binary) #BINARYSMALL# (1000 chars of binary) #PLAYER_IP# (IP of the player's
+              computer) #PLAYERNAME# (player's name) #RANDOM_IP# (A fresh, randomly generated IP Address)
+
+              Executables: #SSH_CRACK# #FTP_CRACK# #WEB_CRACK# #SMTP_CRACK# #SQL_CRACK# #HEXCLOCK_EXE# #CLOCK_PROGRAM#
+              #DECYPHER_PROGRAM# #DECHEAD_PROGRAM# #MEDICAL_PROGRAM# #THEMECHANGER_EXE# #EOS_SCANNER_EXE#
+              #SECURITYTRACER_PROGRAM# #TRACEKILL_EXE# #RTSP_EXE# #EXT_SEQUENCER_EXE# #SHELL_OPENER_EXE#
+
+              Labyrinths programs: #TORRENT_EXE# #SSL_EXE# #FTP_FAST_EXE# #SIGNAL_SCRAMBLER_EXE# #MEM_FORENSICS_EXE#
+              #MEM_DUMP_GENERATOR# #PACIFIC_EXE# #NETMAP_ORGANIZER_EXE# #SHELL_CONTROLLER_EXE# #NOTES_DUMPER_EXE#
+              #DLC_MUSIC_EXE#
+
+              Themes: #WHITE_THEME# #GREEN_THEME# #YELLOW_THEME# #TEAL_THEME# #BASE_THEME# #PURPLE_THEME# #MINT_THEME#
+
+              Misc: #PACEMAKER_FW_WORKING# #PACEMAKER_FW_DANGER#
+
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="customthemefile" type="tns:customthemefileType" maxOccurs="unbounded" minOccurs="0"></xs:element>
-        <xs:element name="encryptedFile" type="tns:encryptedFileType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="encryptedFile" type="tns:encryptedFileType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Encrypted files can be traced with DECHead.exe, and decoded with Decypher.exe.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="mailServer" type="tns:mailServerType" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="eosDevice" type="tns:eosDeviceType" maxOccurs="unbounded" minOccurs="0"></xs:element>
-        <xs:element name="uploadServerDaemon" type="tns:uploadServerDaemonType" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="addWebServer" type="tns:addWebServerType" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="deathRowDatabase" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="academicDatabase" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="ispSystem" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="messageBoard" type="tns:messageBoardType" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="MedicalDatabase" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="HeartMonitor" type="tns:HeartMonitorType" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="PointClicker" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="eosDevice" type="tns:eosDeviceType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Create other eos device computers on load, attached to this one, all set up, with these files on it. It'll
+              also automatically generate some apps and save files and things for flavor. You can have more than one eOS
+              device per computer!
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="uploadServerDaemon" type="tns:uploadServerDaemonType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Special sort of server that allows to upload files to it without admin permissions.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="addWebServer" type="tns:addWebServerType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Web servers renders web pages from the web presets folder. It renders proper html and everything (though
+              it doesn't accept input yet).
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="deathRowDatabase" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Death row database loads a pre-set collection of records.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="academicDatabase" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Draws from the People.All source.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ispSystem" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              An ISP system, like the one used in the ETAS (Emergency Trace Aversion Sequence).
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="messageBoard" type="tns:messageBoardType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>/el style message board</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="MedicalDatabase" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Draws from the People.All source</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="HeartMonitor" type="tns:HeartMonitorType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              SPECIAL NOTE: probably don't use this in your mods to actually kill anyone. That moment was special for
+              Hacknet alone. For that reason, I wont show how to generate valid pacemaker files in here. This can be
+              used for narrative reasons though.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PointClicker" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>This draws from the People.All source.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="SongChangerDaemon" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="variableMissionListingServer" type="tns:variableMissionListingServerType" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="missionHubServer" type="tns:missionHubServerType" maxOccurs="1" minOccurs="0"></xs:element>
-        <xs:element name="memoryDumpFile" type="tns:memoryDumpFileType" maxOccurs="unbounded" minOccurs="0"></xs:element>
-        <xs:element name="Memory" type="tns:MemoryType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="variableMissionListingServer" type="tns:variableMissionListingServerType" maxOccurs="1"
+          minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Lists news articles and missions like on Entropy or SlashBot.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="missionHubServer" type="tns:missionHubServerType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Creates a CSEC-Style mission board</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="CreditsDaemon" type="tns:CreditsDaemonType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Credits server.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="FastActionHost" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              An optimized Action host daemon - this daemon does nothing except host delayable actions - but it is much
+              more efficient at doing that than other servers. If you have lots of actions looping or in delay at once
+              (more than 50, say) it might be worth moving them to be delay hosted on one of these if you encounter
+              performance issues.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="DHSDaemon" type="tns:DHSDaemonType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Creates a bibliotheque (DLC IRC server) style message board. Can be used to inject missions and messages into via the faction system.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="CustomConnectDisplayDaemon" type="xs:string" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Changes the default connect display to look like the one the &quot;ricer&quot; had in Labyrinths
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="LogoDaemon" type="tns:LogoDaemonType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Displays a big logo on the front of the server with optional messages underneath.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="LogoCustomConnectDisplayDaemon" type="tns:LogoCustomConnectDisplayDaemonType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Custom connect display with a nameplate logo and title image like PacificAir had in Labyrinths.</xs:documentation></xs:annotation></xs:element>
+        <xs:element name="IRCDaemon" type="tns:IRCDaemonType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Creates an IRC daemon (without missions etc - just the chat). It can be dynamically added to later with
+              Actions!
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="WhitelistAuthenticatorDaemon" type="tns:WhitelistAuthenticatorDaemonType" maxOccurs="1"
+          minOccurs="0">
+          <xs:annotation>
+            <xs:documentation> Either mean that this server checks against a remote whitelist to see who to let on (Remote="RemoteServerID"), or that it itself is that whitelist server (SelfAuthenticating="false").
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="DatabaseDaemon" type="tns:DatabaseDaemonType">
+          <xs:annotation>
+            <xs:documentation>Database daemons display a list of records of any datatype in Hacknet.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="memoryDumpFile" type="tns:memoryDumpFileType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Memory dump file - this can be downloaded and analyzed with MemForensics.exe
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Memory" type="tns:MemoryType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Memory that will be turned into a memory dump using MemDumpGenerator.exe
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="id" type="xs:string" use="required">
         <xs:annotation>
@@ -73,8 +285,11 @@ Supported names: ssh, ftp, web, torrent, medical, smtp, sql</xs:documentation>
           <xs:documentation>Name of the computer on the netMap</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="ip">
-        <xs:simpleType>
+      <xs:attribute name="ip" use="optional">
+                <xs:annotation>
+                  <xs:documentation>Pre-defined IP address. If not specified an IP will be generated dynamically.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:pattern value="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"></xs:pattern>
           </xs:restriction>
@@ -83,11 +298,11 @@ Supported names: ssh, ftp, web, torrent, medical, smtp, sql</xs:documentation>
       <xs:attribute name="security">
         <xs:annotation>
           <xs:documentation>Number from 0 to 5 that represents how hard it is to hack
-            From 1-4 it will need that many
-            ports to open, 4 and above will automatically add other security to scale it up
-            easily, you can overwrite
-            specifics below (recommended)
-          </xs:documentation>
+
+- From 1-4 it will need that many ports to open
+- 4 and above will automatically add other security to scale it up easily
+
+You can overwrite specifics via computer security sub-elements.</xs:documentation>
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:int">
@@ -114,6 +329,13 @@ Supported names: ssh, ftp, web, torrent, medical, smtp, sql</xs:documentation>
             <xs:enumeration value="tablet"></xs:enumeration>
             <xs:enumeration value="ePhone"></xs:enumeration>
             <xs:enumeration value="ePhone2"></xs:enumeration>
+            <xs:enumeration value="Psylance"></xs:enumeration>
+            <xs:enumeration value="PacificAir"></xs:enumeration>
+            <xs:enumeration value="Alchemist"></xs:enumeration>
+            <xs:enumeration value="DLCLaptop"></xs:enumeration>
+            <xs:enumeration value="DLCPC1"></xs:enumeration>
+            <xs:enumeration value="DLCPC2"></xs:enumeration>
+            <xs:enumeration value="DLCServer"></xs:enumeration>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
@@ -139,19 +361,23 @@ Supported names: ssh, ftp, web, torrent, medical, smtp, sql</xs:documentation>
     <xs:attribute name="password" type="xs:string"></xs:attribute>
     <xs:attribute name="type">
       <xs:annotation>
-        <xs:documentation>Priviledge of the account:
-          ADMIN = 0;
-          ALL = 1;
-          MAIL = 2;
-          MISSIONLIST = 3;
+        <xs:documentation>Priviledge of the account. Either the number or the name of the type can be used:
+ADMIN = 0;
+ALL = 1; (Can Delete files)
+MAIL = 2; (for mail accounts)
+MISSIONLIST = 3; (for mission listing server accounts)
         </xs:documentation>
       </xs:annotation>
       <xs:simpleType>
-        <xs:restriction base="xs:int">
+        <xs:restriction base="xs:string">
           <xs:enumeration value="0"></xs:enumeration>
           <xs:enumeration value="1"></xs:enumeration>
           <xs:enumeration value="2"></xs:enumeration>
           <xs:enumeration value="3"></xs:enumeration>
+          <xs:enumeration value="ALL"></xs:enumeration>
+          <xs:enumeration value="ADMIN"></xs:enumeration>
+          <xs:enumeration value="MAIL"></xs:enumeration>
+          <xs:enumeration value="MISSIONLIST"></xs:enumeration>
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
@@ -184,27 +410,31 @@ Supported names: ssh, ftp, web, torrent, medical, smtp, sql</xs:documentation>
     </xs:complexType>
 
   <xs:complexType name="proxyType">
-    <xs:attribute name="time" type="xs:int"></xs:attribute>
+    <xs:attribute name="time" type="xs:float">
+      <xs:annotation>
+        <xs:documentation>Time is a multiplier by the base time (30 seconds). Time of 1 is "normal" and time of 2 is "long" - use the multiplier here to change the feel of it.</xs:documentation>
+      </xs:annotation></xs:attribute>
   </xs:complexType>
   
     <xs:complexType name="adminType">
-        <xs:annotation>
-          <xs:documentation>Auto-administrator adder - this resets the ports and stuff when the player disconnects</xs:documentation>
-        </xs:annotation>
         <xs:attribute name="type">
             <xs:annotation>
-              <xs:documentation>- basic only resets after 15 seconds or so.
-- progress admins reset ports, firewall and proxy progress, but only if the player isn't the admin.
-</xs:documentation>
+              <xs:documentation>- none can be used for computers that have the "security" more than 4, to remove the auto-added admin
+- basic only resets after 15 seconds or so.
+- progress reset ports, firewall and proxy progress, but only if the player isn't the admin.
+- fast insta-reset whenever you disconnect if isSuper="true"
+
+For general computers, it's best practice to use a progress admin, unless you want port changes to persist between disconnects.</xs:documentation>
             </xs:annotation>
             <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="fast"></xs:enumeration>
-            <xs:enumeration value="basic"></xs:enumeration>
-            <xs:enumeration value="progress"></xs:enumeration>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="fast"></xs:enumeration>
+                <xs:enumeration value="basic"></xs:enumeration>
+                <xs:enumeration value="progress"></xs:enumeration>
+                <xs:enumeration value="none"></xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
       <xs:attribute name="resetPassword" type="xs:boolean"></xs:attribute>
       <xs:attribute name="isSuper" type="xs:boolean">
         <xs:annotation>
@@ -218,39 +448,24 @@ Supported names: ssh, ftp, web, torrent, medical, smtp, sql</xs:documentation>
     
     <xs:complexType name="positionNearType">
       <xs:attribute name="target" type="xs:string"></xs:attribute>
-      <xs:attribute name="position" type="xs:float"></xs:attribute>
-      <xs:attribute name="total" type="xs:int"></xs:attribute>
-      <xs:attribute name="extraDistance" type="xs:float"></xs:attribute>
+      <xs:attribute name="position" type="xs:float">
+        <xs:annotation>
+          <xs:documentation>Radially position around target computer.</xs:documentation>
+        </xs:annotation></xs:attribute>
+      <xs:attribute name="total" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Number of radially surrounding nodes</xs:documentation>
+        </xs:annotation></xs:attribute>
+      <xs:attribute name="extraDistance" type="xs:float">
+        <xs:annotation>
+          <xs:documentation>Should be between -0.6 and 0.3 - anything bigger will seem really far away, and can cause problems. 0.1 is a good distance.</xs:documentation>
+        </xs:annotation></xs:attribute>
+      <xs:attribute name="force" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>The &quot;force&quot; tag ensures that this node is positioned exactly where it's defined here, regardless of overlaps with other nodes etc. It basically prevents the checks that ensure stability, but guarantees that it'll be placed close. </xs:documentation></xs:annotation></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="fileType">
-        <xs:annotation>
-          <xs:documentation>Executables:
-#SSH_CRACK#
-#FTP_CRACK#
-#WEB_CRACK#
-#SMTP_CRACK#
-#SQL_CRACK#
-#HEXCLOCK_EXE#
-#CLOCK_PROGRAM#
-#DECYPHER_PROGRAM#
-#DECHEAD_PROGRAM#
-#MEDICAL_PROGRAM#
-
-Themes:
-#WHITE_THEME#
-#GREEN_THEME#
-#YELLOW_THEME#
-#TEAL_THEME#
-#BASE_THEME#
-#PURPLE_THEME#
-#MINT_THEME#
-
-Misc:
-#PACEMAKER_FW_WORKING#
-#PACEMAKER_FW_DANGER#
-</xs:documentation>
-        </xs:annotation>
         <xs:simpleContent>
       <xs:extension base="xs:string">
         <xs:attribute name="path" type="xs:string"></xs:attribute>
@@ -266,14 +481,23 @@ Misc:
       <xs:attribute name="name" type="xs:string"></xs:attribute>
       <xs:attribute name="extension" type="xs:string">
         <xs:annotation>
-          <xs:documentation>
-            Original file extension (.txt, ...) Note: will only work if file name ends with .dec extension.
+          <xs:documentation>Original file extension to use for decryption (.txt, ...) 
+Note: will only work if file name ends with .dec extension.
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="ip" type="xs:string"></xs:attribute>
-      <xs:attribute name="header" type="xs:string"></xs:attribute>
-      <xs:attribute name="pass" type="xs:string"></xs:attribute>
+      <xs:attribute name="ip" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>IP that displays when tracing with DECHead.exe</xs:documentation>
+        </xs:annotation></xs:attribute>
+      <xs:attribute name="header" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Header that displays when tracing with DECHead.exe</xs:documentation>
+        </xs:annotation></xs:attribute>
+      <xs:attribute name="pass" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Optional decryption password </xs:documentation>
+        </xs:annotation></xs:attribute>
       </xs:extension>
     </xs:simpleContent>
     </xs:complexType>
@@ -337,7 +561,14 @@ Misc:
     </xs:complexType>
 
     <xs:complexType name="HeartMonitorType">
-      <xs:attribute name="patient" type="xs:string"></xs:attribute>
+        <xs:annotation>
+          <xs:documentation></xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="patient" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Patient is the firstname initial underscore, then their last name (ex: J_Stalvern)
+If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
+        </xs:annotation></xs:attribute>
     </xs:complexType>
     
     <xs:complexType name="messageBoardType">
@@ -361,7 +592,10 @@ Misc:
 
     <xs:complexType name="eosDeviceType">
       <xs:sequence>
-        <xs:element name="note" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="note" type="xs:string" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Note filenames are generated automatically by taking the first line of the file, and replacing spaces with underscores.</xs:documentation>
+          </xs:annotation></xs:element>
         <xs:element name="mail" type="tns:mailType" maxOccurs="unbounded" minOccurs="0"></xs:element>
         <xs:element name="file" type="tns:fileType" maxOccurs="unbounded" minOccurs="0"></xs:element>
       </xs:sequence>
@@ -373,11 +607,18 @@ Misc:
     </xs:complexType>
 
     <xs:complexType name="mailServerType">
-      <xs:sequence>
-        <xs:element name="email" type="tns:emailType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:annotation>
+          <xs:documentation>Specify if this server will generate junk emails for non-player accounts on it.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+        <xs:element name="email" type="tns:emailType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Add email to the server. Logging in with someone's account will show these just like the way the player gets emails.</xs:documentation>
+          </xs:annotation></xs:element>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string"></xs:attribute>
       <xs:attribute name="color" type="xs:string"></xs:attribute>
+      <xs:attribute name="generateJunk " type="xs:boolean"></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="mailType">
@@ -397,5 +638,88 @@ Misc:
 
     <xs:complexType name="portsForCrackType">
       <xs:attribute name="val" type="xs:int" default="0"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="CreditsDaemonType"></xs:complexType>
+
+    <xs:complexType name="DHSDaemonType">
+      <xs:sequence>
+        <xs:element name="agent" type="tns:agentType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      </xs:sequence>
+      <xs:attribute name="groupName" type="xs:string"></xs:attribute>
+      <xs:attribute name="addsFactionPointOnMissionComplete" type="xs:boolean"></xs:attribute>
+      <xs:attribute name="autoClearMissionsOnPlayerComplete" type="xs:boolean"></xs:attribute>
+      <xs:attribute name="themeColor" type="xs:string"></xs:attribute>
+      <xs:attribute name="allowContractAbbandon" type="xs:boolean"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="LogoDaemonType">
+      <xs:attribute name="Name" type="xs:string"></xs:attribute>
+      <xs:attribute name="ShowsTitle" type="xs:boolean"></xs:attribute>
+      <xs:attribute name="TextColor" type="xs:string"></xs:attribute>
+      <xs:attribute name="LogoImagePath" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>If you do not provide a logo image path, it'll display a fancy loading spinner instead.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="IRCDaemonType"></xs:complexType>
+
+    <xs:complexType name="WhitelistAuthenticatorDaemonType">
+      <xs:annotation>
+        <xs:documentation>
+          If true, protects itself against all connections not on the list. Generally "unbreakable" without scripts.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="SelfAuthenticating" type="xs:boolean"></xs:attribute>
+      <xs:attribute name="Remote" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Remote host to checks against that host's whitelist.</xs:documentation>
+        </xs:annotation></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="DatabaseDaemonType">
+      <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Permissions" type="xs:string"></xs:attribute>
+        <xs:attribute name="DataType" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>All basic C# datatypes from .NET
+
+GitCommitEntry
+TextRecord
+OnlineAccount
+CAROData
+Account
+
+</xs:documentation>
+          </xs:annotation></xs:attribute>
+        <xs:attribute name="Foldername" type="xs:string"></xs:attribute>
+        <xs:attribute name="Color" type="xs:string"></xs:attribute>
+        <xs:attribute name="AdminEmailAccount" type="xs:string"></xs:attribute>
+        <xs:attribute name="AdminEmailHostID" type="xs:string"></xs:attribute>
+        <xs:attribute name="Name" type="xs:string"></xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="LogoCustomConnectDisplayDaemonType">
+      <xs:attribute name="logo" type="xs:string"></xs:attribute>
+      <xs:attribute name="title" type="xs:string"></xs:attribute>
+      <xs:attribute name="overdrawLogo" type="xs:string"></xs:attribute>
+      <xs:attribute name="buttonAlignment">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="left"></xs:enumeration>
+            <xs:enumeration value="middle"></xs:enumeration>
+            <xs:enumeration value="right"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="agentType">
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="pass" type="xs:string"></xs:attribute>
+      <xs:attribute name="color" type="xs:string"></xs:attribute>
     </xs:complexType>
 </xs:schema>
