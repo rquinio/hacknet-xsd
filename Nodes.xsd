@@ -234,7 +234,7 @@ It's generally best practice to only use a single daemon per node, but it does s
         </xs:element>
         <xs:element name="LogoDaemon" type="tns:LogoDaemonType" maxOccurs="1" minOccurs="0">
           <xs:annotation>
-            <xs:documentation>Displays a big logo on the front of the server with optional messages underneath.</xs:documentation>
+            <xs:documentation>Displays a big logo on the front of the server, with optional messages underneath from tag body.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="LogoCustomConnectDisplayDaemon" type="tns:LogoCustomConnectDisplayDaemonType" maxOccurs="1" minOccurs="0">
@@ -255,7 +255,7 @@ It's generally best practice to only use a single daemon per node, but it does s
             </xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element name="DatabaseDaemon" type="tns:DatabaseDaemonType">
+        <xs:element name="DatabaseDaemon" type="tns:DatabaseDaemonType" maxOccurs="1" minOccurs="0">
           <xs:annotation>
             <xs:documentation>Database daemons display a list of records of any datatype in Hacknet.</xs:documentation>
           </xs:annotation>
@@ -549,6 +549,7 @@ Note: will only work if file name ends with .dec extension.
       <xs:attribute name="color" type="xs:string"></xs:attribute>
       <xs:attribute name="assigner" type="xs:boolean"></xs:attribute>
       <xs:attribute name="public" type="xs:boolean"></xs:attribute>
+      <xs:attribute name="title" type="xs:string"></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="missionHubServerType">
@@ -558,6 +559,7 @@ Note: will only work if file name ends with .dec extension.
       <xs:attribute name="themeColor" type="xs:string"></xs:attribute>
       <xs:attribute name="lineColor" type="xs:string"></xs:attribute>
       <xs:attribute name="backgroundColor" type="xs:string"></xs:attribute>
+      <xs:attribute name="allowAbandon" type="xs:boolean" use="optional"></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="HeartMonitorType">
@@ -640,7 +642,11 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
       <xs:attribute name="val" type="xs:int" default="0"></xs:attribute>
     </xs:complexType>
 
-    <xs:complexType name="CreditsDaemonType"></xs:complexType>
+    <xs:complexType name="CreditsDaemonType">
+      <xs:attribute name="Title" type="xs:string"></xs:attribute>
+      <xs:attribute name="ButtonText" type="xs:string"></xs:attribute>
+      <xs:attribute name="ConditionalActionSetToRunOnButtonPressPath" type="xs:string"></xs:attribute>
+    </xs:complexType>
 
     <xs:complexType name="DHSDaemonType">
       <xs:sequence>
@@ -654,15 +660,33 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
     </xs:complexType>
 
     <xs:complexType name="LogoDaemonType">
-      <xs:attribute name="Name" type="xs:string"></xs:attribute>
-      <xs:attribute name="ShowsTitle" type="xs:boolean"></xs:attribute>
-      <xs:attribute name="TextColor" type="xs:string"></xs:attribute>
-      <xs:attribute name="LogoImagePath" type="xs:string" use="optional">
-        <xs:annotation>
-          <xs:documentation>If you do not provide a logo image path, it'll display a fancy loading spinner instead.</xs:documentation></xs:annotation></xs:attribute>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="LogoImagePath" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                If you do not provide a logo image path, it'll display a fancy loading spinner instead.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Name" type="xs:string"></xs:attribute>
+          <xs:attribute name="ShowsTitle" type="xs:boolean"></xs:attribute>
+          <xs:attribute name="TextColor" type="xs:string"></xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="IRCDaemonType"></xs:complexType>
+    <xs:complexType name="IRCDaemonType">
+      <xs:sequence>
+        <xs:element name="user" type="tns:userType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="post" type="tns:postType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>IRC Message</xs:documentation></xs:annotation></xs:element>
+      </xs:sequence>
+      <xs:attribute name="themeColor" type="xs:string"></xs:attribute>
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="needsLogin" type="xs:boolean"></xs:attribute>
+    </xs:complexType>
 
     <xs:complexType name="WhitelistAuthenticatorDaemonType">
       <xs:annotation>
@@ -678,8 +702,9 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
     </xs:complexType>
 
     <xs:complexType name="DatabaseDaemonType">
-      <xs:simpleContent>
-      <xs:extension base="xs:string">
+        <xs:sequence>
+          <xs:any minOccurs="0" maxOccurs="unbounded"></xs:any>
+        </xs:sequence>
         <xs:attribute name="Permissions" type="xs:string"></xs:attribute>
         <xs:attribute name="DataType" type="xs:string">
           <xs:annotation>
@@ -698,8 +723,6 @@ Account
         <xs:attribute name="AdminEmailAccount" type="xs:string"></xs:attribute>
         <xs:attribute name="AdminEmailHostID" type="xs:string"></xs:attribute>
         <xs:attribute name="Name" type="xs:string"></xs:attribute>
-        </xs:extension>
-      </xs:simpleContent>
     </xs:complexType>
 
     <xs:complexType name="LogoCustomConnectDisplayDaemonType">
@@ -721,5 +744,18 @@ Account
       <xs:attribute name="name" type="xs:string"></xs:attribute>
       <xs:attribute name="pass" type="xs:string"></xs:attribute>
       <xs:attribute name="color" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="userType">
+      <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+      <xs:attribute name="color" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="postType">
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="user" type="xs:string" use="required"></xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
 </xs:schema>
