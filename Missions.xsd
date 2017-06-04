@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hacknet-os.com/Missions"
+  xmlns:tns="http://hacknet-os.com/Missions" elementFormDefault="qualified">
+  <xs:element name="mission">
+        <xs:annotation>
+          <xs:documentation>Mission completion: for a reply to work, the mission the player is currently on must have the same email sender field as the email they reply to in their inbox. This means that if you have a silent connector mission, make sure it has the same sender filled in in the email field.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+      <xs:sequence>
+
+        <xs:element name="goals" type="tns:goalsType">
+          <xs:annotation>
+            <xs:documentation>
+              All goals added to a mission have to be complete before the mission will complete.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="missionStart" type="tns:missionStartEndType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Function to activate as soon as the mission is accepted from a hub server, or it's started in an email
+              chain.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="missionEnd" type="tns:missionStartEndType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Function to activate as soon as the mission is completed. Note that this will never trigger if the mission
+              is abandoned or otherwise lost.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="nextMission" type="tns:nextMissionType">
+          <xs:annotation>
+            <xs:documentation>
+              Defines the path to the next mission file, which will be loaded and email sent when the current mission is
+              completed. If you want there to be no mission following this one, set nextMission to "NONE".
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="branchMissions" type="tns:branchMissionsType" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Branch missions are loaded during the load step of this mission, and are held in parallel. Every frame (if
+              ActiveCheck) or every time an email is responded to, the mission system will check the goals of the
+              current mission (this file), and if it doesn't pass them, it will check (in order) the goals of all the
+              branch missions defined here. If successful, the branch mission's "nextMission" will be loaded. This
+              allows you to put in branching story paths, variable responses, and allow different responses for various
+              goals. It's a bit finicky to use, so I recommend testing all branch structures you put in very carefully.
+              Note that the branch mission's email will not be sent - they are all loaded in silent mode.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="posting" type="tns:postingType" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="email" type="tns:emailType"></xs:element>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>the mission ID - this isn't used in-code but is sometimes useful in debugging and testing</xs:documentation></xs:annotation></xs:attribute>
+      <xs:attribute name="activeCheck" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>if this is set to true, when this mission is active, Hacknet will test for this mission being complete every frame, instead of only when the player responds to an email. This is very useful for creating delays, and for situations where the player is contacted from outside an existing chain.</xs:documentation></xs:annotation></xs:attribute>
+      <xs:attribute name="shouldIgnoreSenderVerification" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>This prevents the check to ensure that the player responded to the right sender when checking for mission completion.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="goalsType">
+    <xs:sequence>
+      <xs:element name="goal" type="tns:goalType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="missionStartEndType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="val" type="xs:int" use="optional">
+          <xs:annotation>
+            <xs:documentation>
+              Integer argument (no decimal points) to the function. This is optional, and is only useful with a few of
+              these (like changeSong and addRank, which need a number passed into them).
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="suppress" type="xs:boolean" use="optional"></xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="nextMissionType">
+    <xs:annotation>
+      <xs:documentation>
+        WARNING: The IsSilent flag is... admittedly in a terrible place here. It silenced THIS mission, not the next
+        one. This means that if you set IsSilent to be true here, this mission will not send and email when it is
+        loaded.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="IsSilent" type="xs:boolean"></xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="branchMissionsType">
+    <xs:sequence>
+      <xs:element name="branch" type="xs:string" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Path to mission file (ex: Missions/BranchExample/TestBranchMission.xml)</xs:documentation>
+        </xs:annotation></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="emailType">
+    <xs:annotation>
+      <xs:documentation>
+        Data of the email the player will be sent when this mission is accepted or continued to
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="sender" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The sender field is very important for branching or silent mission chains. Even if this file you're editing isn't the email on the server the player will be responding to, it will still run it's completion checks as long as the player is responding to any email from the same sender. This doesn't affect basic and normal missions, so if you're not doing anything too fancy, don't worry about it.</xs:documentation></xs:annotation></xs:element>
+      <xs:element name="subject" type="xs:string"></xs:element>
+      <xs:element name="body" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Body of the email. Be careful with your formatting! The Hacknet parser does not account for auto-whitespace added to the left.
+Email contents are very important - small changes in wording can dramatically change how easy or hard a mission is.
+Be very conscious about how much you are hinting at and guiding the player, and understand that it will be much harder for everyone that's not you.</xs:documentation>
+        </xs:annotation></xs:element>
+      <xs:element name="attachments" type="tns:AttachmentsType" maxOccurs="1" minOccurs="1"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+    <xs:complexType name="goalType">
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="filedeletion"></xs:enumeration>
+            <xs:enumeration value="clearfolder"></xs:enumeration>
+            <xs:enumeration value="filedownload"></xs:enumeration>
+            <xs:enumeration value="filechange"></xs:enumeration>
+            <xs:enumeration value="getadmin"></xs:enumeration>
+            <xs:enumeration value="getstring"></xs:enumeration>
+            <xs:enumeration value="delay"></xs:enumeration>
+            <xs:enumeration value="hasflag"></xs:enumeration>
+            <xs:enumeration value="fileupload"></xs:enumeration>
+            <xs:enumeration value="AddDegree"></xs:enumeration>
+            <xs:enumeration value="wipedegrees"></xs:enumeration>
+            <xs:enumeration value="sendemail"></xs:enumeration>
+            <xs:enumeration value="getadminpasswordstring"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="target" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Target of the goal (computer, string, flag, ...)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="file" type="xs:string"></xs:attribute>
+      <xs:attribute name="path" type="xs:string"></xs:attribute>
+      <xs:attribute name="keyword" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For filechange type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="caseSensitive" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>For filechange type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="removal" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>For filechange type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="time" type="xs:float">
+        <xs:annotation>
+          <xs:documentation>For delay type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="destTarget" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For fileupload type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="destPath" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For fileupload type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="decrypt" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For fileupload type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="decryptPass" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For fileupload type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="owner" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For AddDegree type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="degree" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For AddDegree type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="uni" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For AddDegree type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="gpa" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For AddDegree type</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="mailServer" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For sendemail type</xs:documentation>
+        </xs:annotation></xs:attribute>
+      <xs:attribute name="recipient" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For sendemail type</xs:documentation></xs:annotation></xs:attribute>
+      <xs:attribute name="subject" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>For sendemail type</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="postingType">
+        <xs:annotation>
+          <xs:documentation>Posting of a mission is what gets read and put up on a mission listing board like CSEC or Entropy in base Hacknet. 
+Body text of the posting will appear when the mission is clicked on. It should contain a basic outline, with any warnings the player needs. Once accepted, the email should contain full details.
+Before the reqs and required rank are met, the mission will appear locked.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="requiredRank" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Faction rank the player needs to have before this mission is unlocked (player rank must be >= this number)</xs:documentation>
+            </xs:annotation></xs:attribute>
+            <xs:attribute name="title" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Mission title line that's displayed in the list.</xs:documentation></xs:annotation></xs:attribute>
+      <xs:attribute name="reqs" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Comma separated list of required flags before this mission can be accepted from a Hub server.</xs:documentation>
+        </xs:annotation></xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+      
+    </xs:complexType>
+
+    <xs:complexType name="AttachmentsType">
+        <xs:annotation>
+          <xs:documentation>Clickable items at the bottom of the email, with a small "+"
+You can have as many attachments as you want, of any kind, but I recommend keeping the number small whenever possible, so the player can be focused on a single goal, and not be too overwhelmed. </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+        <xs:element name="note" type="tns:noteType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Guide the player! Hacknet missions are very frustrating when the player has too little direction and cant continue.
+Remember that the note space is very small, so text overflow onto new lines happens quickly.</xs:documentation>
+          </xs:annotation></xs:element>
+        <xs:element name="link" type="tns:linkType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Links a computer on the netmap</xs:documentation>
+          </xs:annotation></xs:element>
+        <xs:element name="account" type="tns:accountType" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Scans for the computer, then searches it's accounts for the provided username and password, and adds it to the list of known accounts for auto completion. It's a good way of providing the password to a server.</xs:documentation>
+          </xs:annotation></xs:element>
+      </xs:sequence>
+
+    </xs:complexType>
+
+    <xs:complexType name="noteType">
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="title" type="xs:string"></xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="linkType">
+      <xs:attribute name="comp" type="xs:string"></xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="accountType">
+      <xs:attribute name="comp" type="xs:string"></xs:attribute>
+      <xs:attribute name="user" type="xs:string"></xs:attribute>
+      <xs:attribute name="pass" type="xs:string"></xs:attribute>
+    </xs:complexType>
+</xs:schema>
