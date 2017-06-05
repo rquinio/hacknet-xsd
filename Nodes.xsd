@@ -250,8 +250,9 @@ It's generally best practice to only use a single daemon per node, but it does s
         <xs:element name="WhitelistAuthenticatorDaemon" type="tns:WhitelistAuthenticatorDaemonType" maxOccurs="1"
           minOccurs="0">
           <xs:annotation>
-            <xs:documentation> Either mean that this server checks against a remote whitelist to see who to let on (Remote="RemoteServerID"), or that it itself is that whitelist server (SelfAuthenticating="false").
-            </xs:documentation>
+            <xs:documentation> Either mean that
+- this server checks against a remote whitelist to see who to let on (Remote="RemoteServerID"), the list of whitelisted IPs (one per line) being in the file /Whitelist/list.txt
+- or that it itself is that whitelist server (SelfAuthenticating="false").</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="DatabaseDaemon" type="tns:DatabaseDaemonType" maxOccurs="1" minOccurs="0">
@@ -364,7 +365,7 @@ You can overwrite specifics via computer security sub-elements.</xs:documentatio
 ADMIN = 0;
 ALL = 1; (Can Delete files)
 MAIL = 2; (for mail accounts)
-MISSIONLIST = 3; (for mission listing server accounts)
+MISSIONLIST = 3; (for mission listing server accounts)
         </xs:documentation>
       </xs:annotation>
       <xs:simpleType>
@@ -587,8 +588,14 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
     </xs:complexType>
 
     <xs:complexType name="addWebServerType">
-      <xs:attribute name="name" type="xs:string"></xs:attribute>
-      <xs:attribute name="url" type="xs:string"></xs:attribute>
+      <xs:attribute name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Label of button to go to web view</xs:documentation>
+        </xs:annotation></xs:attribute>
+      <xs:attribute name="url" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation>Path to HTML page relative to extension directory. The page will be copied onto the target computer as /web/index.html </xs:documentation>
+        </xs:annotation></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="eosDeviceType">
@@ -704,7 +711,15 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
         <xs:sequence>
           <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"></xs:any>
         </xs:sequence>
-        <xs:attribute name="Permissions" type="xs:string"></xs:attribute>
+        <xs:attribute name="Permissions">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="adminonly"></xs:enumeration>
+              <xs:enumeration value="private"></xs:enumeration>
+              <xs:enumeration value="admin"></xs:enumeration>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="DataType" type="xs:string">
           <xs:annotation>
             <xs:documentation>All basic C# datatypes from .NET
@@ -717,10 +732,10 @@ Account
 
 </xs:documentation>
           </xs:annotation></xs:attribute>
-        <xs:attribute name="Foldername" type="xs:string"></xs:attribute>
-        <xs:attribute name="Color" type="xs:string"></xs:attribute>
-        <xs:attribute name="AdminEmailAccount" type="xs:string"></xs:attribute>
-        <xs:attribute name="AdminEmailHostID" type="xs:string"></xs:attribute>
+        <xs:attribute name="Foldername" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="Color" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="AdminEmailAccount" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="AdminEmailHostID" type="xs:string" use="optional"></xs:attribute>
         <xs:attribute name="Name" type="xs:string"></xs:attribute>
     </xs:complexType>
 
