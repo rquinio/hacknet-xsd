@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hacknet-os.com/Nodes"
-  xmlns:tns="http://hacknet-os.com/Nodes" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hacknet-os.com" xmlns:tns="http://hacknet-os.com" elementFormDefault="qualified">
   <xs:element name="Computer">
         <xs:annotation>
           <xs:documentation>Computers are defined by:

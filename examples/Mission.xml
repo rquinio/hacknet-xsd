@@ -17,7 +17,8 @@ activeCheck : if this is set to true, when this mission is active, Hacknet will 
 shouldIgnoreSenderVerification : This prevents the check to ensure that the player responded to the right sender
                                 when checking for mission completion.
 -->
-<mission xmlns="http://hacknet-os.com/Missions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hacknet-os.com/Missions ../Missions.xsd" id="testMission0" activeCheck="true" shouldIgnoreSenderVerification="false">
+<mission xmlns="http://hacknet-os.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hacknet-os.com ../Missions.xsd"
+  id="testMission0" activeCheck="true" shouldIgnoreSenderVerification="false">
   <goals>
     <!-- All goals added to a mission have to be complete before the mission will complete-->
    

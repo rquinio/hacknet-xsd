@@ -1,5 +1,5 @@
 <?xml version = "1.0" encoding = "UTF-8" ?>
-<Computer xmlns="http://hacknet-os.com/Nodes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hacknet-os.com/Nodes ../Nodes.xsd" id="advExamplePC"
+<Computer xmlns="http://hacknet-os.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hacknet-os.com ../Nodes.xsd" id="advExamplePC"
          name="Extension Example PC"
          ip="167.194.132.7"
          security="2"
