@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hacknet-os.com" xmlns:tns="http://hacknet-os.com" elementFormDefault="qualified">
+  <xs:include schemaLocation="Actions.xsd" />
+  <xs:element name="ConditionalActions">
+  <xs:complexType>
+
+  <xs:sequence>
+    <xs:element name="OnConnect">
+                    <xs:annotation>
+                      <xs:documentation>Triggered when the player connects to the PC with ID in the target field</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                        <xs:extension base="tns:ActionsType">
+                        <xs:attribute name="target" type="xs:string" use="required"></xs:attribute>
+        <xs:attribute name="needsMissionComplete" type="xs:boolean" use="optional"></xs:attribute>
+        <xs:attribute name="requiredFlags" type="xs:string" use="optional"></xs:attribute>
+         </xs:extension>
+         </xs:complexContent>
+      </xs:complexType>
+      </xs:element>
+    <xs:element name="HasFlags">
+                    <xs:annotation>
+                      <xs:documentation>Triggers once the player has *all* of the flags in a comma separated list in requiredFlags</xs:documentation></xs:annotation>
+                    <xs:complexType>
+                     <xs:complexContent>
+                        <xs:extension base="tns:ActionsType">
+                        <xs:sequence>
+                        </xs:sequence>
+                        <xs:attribute name="requiredFlags" type="xs:string" use="required"></xs:attribute>
+                        </xs:extension>
+         </xs:complexContent>
+      </xs:complexType></xs:element>
+    <xs:element name="OnAdminGained">
+      <xs:annotation>
+        <xs:documentation>Triggered once the player gets admin access to the target machine.</xs:documentation></xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+                        <xs:extension base="tns:ActionsType">
+                        <xs:attribute name="target" type="xs:string" use="required"></xs:attribute>
+                        </xs:extension>
+         </xs:complexContent>
+      </xs:complexType></xs:element>
+    <xs:element name="Instantly">
+      <xs:annotation>
+        <xs:documentation>Triggers immediately, as soon as this is finished loading! Actions will happen in the order they appear in this file.
+
+Note: you can also have the needs mission complete flag on instantly actions</xs:documentation>
+      </xs:annotation>
+    </xs:element>
+    <xs:element name="DoesNotHaveFlags">
+                    <xs:annotation>
+                      <xs:documentation>Triggered if the player has none of the flags in the list.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                        <xs:extension base="tns:ActionsType">
+                        <xs:attribute name="Flags" type="xs:string" use="required"></xs:attribute>
+                        </xs:extension>
+         </xs:complexContent>
+      </xs:complexType></xs:element>
+    <xs:element name="OnDisconnect">
+                    <xs:annotation>
+                      <xs:documentation>Triggered when the player disconnects from something, or connects to their own computer.
+You can remove the target tag (or set it to "NONE") to have this trigger when the player disconnects from anything. </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                        <xs:extension base="tns:ActionsType">
+                        <xs:attribute name="target" type="xs:string" use="optional"></xs:attribute>
+                        </xs:extension>
+         </xs:complexContent>
+      </xs:complexType></xs:element>
+  </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+</xs:schema>

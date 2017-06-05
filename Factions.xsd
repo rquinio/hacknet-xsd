@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hacknet-os.com"
+  xmlns:tns="http://hacknet-os.com" elementFormDefault="qualified">
+  <xs:include schemaLocation="Actions.xsd" />
+  <xs:element name="CustomFaction">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Action" maxOccurs="unbounded" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation>Actions triggered by faction-specific conditions (all need to apply)</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="tns:ActionsType">
+                          <xs:attribute name="ValueRequired" type="xs:string">
+                            <xs:annotation>
+                              <xs:documentation>
+                                Triggers once the player's value moves from below this number to equal to or more than
+                                it.
+                              </xs:documentation>
+                            </xs:annotation>
+                          </xs:attribute>
+                          <xs:attribute name="Flags" type="xs:string">
+                            <xs:annotation>
+                              <xs:documentation>Trigger as soon as the player is given the flag</xs:documentation>
+                            </xs:annotation>
+                          </xs:attribute>
+                        </xs:extension>
+                      </xs:complexContent>
+                    </xs:complexType></xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="id" type="xs:string"></xs:attribute>
+      <xs:attribute name="playerVal" type="xs:int"></xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

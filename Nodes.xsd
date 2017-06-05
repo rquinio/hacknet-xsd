@@ -703,7 +703,7 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
 
     <xs:complexType name="DatabaseDaemonType">
         <xs:sequence>
-          <xs:any minOccurs="0" maxOccurs="unbounded"></xs:any>
+          <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"></xs:any>
         </xs:sequence>
         <xs:attribute name="Permissions" type="xs:string"></xs:attribute>
         <xs:attribute name="DataType" type="xs:string">

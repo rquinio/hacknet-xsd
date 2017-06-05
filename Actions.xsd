@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hacknet-os.com" xmlns:tns="http://hacknet-os.com" elementFormDefault="qualified">
+<xs:complexType name="ActionsType">
+<xs:sequence>
+    <xs:element name="RunFunction" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Runs a 'mission function' </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+        <xs:attribute name="FunctionName" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="FunctionValue" type="xs:int" use="optional"></xs:attribute>
+      </xs:complexType></xs:element>
+
+    <xs:element name="AddIRCMessage" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adds a message to a DHSDaemon or IRCDaemon IRC
+@#PLAYERNAME#  notifies the player
+@channel notifies everyone</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+        <xs:simpleContent>
+          <xs:extension base="xs:string">
+            <xs:attribute name="Delay" type="xs:float">
+              <xs:annotation>
+                <xs:documentation>Seconds until the post appears</xs:documentation>
+              </xs:annotation></xs:attribute>
+            <xs:attribute name="Author" type="xs:string"></xs:attribute>
+            <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+          </xs:extension>
+        </xs:simpleContent>
+      </xs:complexType></xs:element>
+
+    <xs:element name="LoadMission" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Immediately loads a mission, replacing whatever's currently there and sending the email</xs:documentation></xs:annotation>
+        <xs:complexType>
+        <xs:attribute name="MissionName" type="xs:string"></xs:attribute>
+      </xs:complexType></xs:element>
+
+    <xs:element name="AddAsset" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Creates a file with the listed content on the computer with ID targetComp, in the folder path specified.
+The folder specified must exist before this runs!
+The file contents field here doesn't support newlines or super long content - this is recommended for just creating items with wildcard data (like programs)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+        <xs:attribute name="FileName" type="xs:string"></xs:attribute>
+        <xs:attribute name="FileContents" type="xs:string"></xs:attribute>
+        <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+        <xs:attribute name="TargetFolderpath" type="xs:string"></xs:attribute>
+      </xs:complexType></xs:element>
+
+    <xs:element name="CopyAsset" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Copies a file from SourceComp + SourceFilePath + SourceFileName  to DestComp + DestFilePath
+This is very useful for adding complex files to a server after the session is created - create a new hidden server that's impossible to find, define all the files you want on there, then copy them over to where you want later.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+        <xs:attribute name="DestFilePath" type="xs:string"></xs:attribute>
+        <xs:attribute name="DestComp" type="xs:string"></xs:attribute>
+        <xs:attribute name="SourceComp" type="xs:string"></xs:attribute>
+        <xs:attribute name="SourceFileName" type="xs:string"></xs:attribute>
+        <xs:attribute name="SourceFilePath" type="xs:string"></xs:attribute>
+      </xs:complexType></xs:element>
+
+    <xs:element name="AddMissionToHubServer" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adds a new mission to a hub server. This works for both missionHubServer servers (CSEC Style), missionListingServers (Entropy style) and also DHSDaemon servers (Bibliotheque style).</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+        <xs:attribute name="MissionFilepath" type="xs:string"></xs:attribute>
+        <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+        <xs:attribute name="AssignmentTag" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Bibliotheque Style: Assignment tag is who the mission starts assigned to of the server's user list. If this tag exists, the player cant claim the mission! 
+Note that adding a mission to an entropy style server, you can set the AssignmentTag to be "top" to add to the top of the list. Otherwise it'll be added to the bottom.</xs:documentation>
+          </xs:annotation></xs:attribute>
+      </xs:complexType></xs:element>
+
+    <xs:element name="RemoveMissionFromHubServer" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Removes the mission from the hub server, if it exists.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+        <xs:attribute name="MissionFilepath" type="xs:string"></xs:attribute>
+        <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+      </xs:complexType></xs:element>
+
+    <xs:element name="AddThreadToMissionBoard" maxOccurs="unbounded" minOccurs="0">
+      <xs:annotation>
+        <xs:documentation>Adds a thread to a /el message board - thread file should be a UFT-8 plaintext document.</xs:documentation></xs:annotation>
+      <xs:complexType>
+        <xs:attribute name="ThreadFilepath" type="xs:string"></xs:attribute>
+        <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+      </xs:complexType></xs:element>
+
+    <xs:element name="CrashComputer" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Crashes computer with the ID TargetComp. 
+- If this is "playerComp" it will crash the player's own computer (bluscreening it) instantly.
+- If it's another computer, this will remove it from the netmap for 15 seconds or so, and disconnect the player if they were connected to it.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="tns:DelayableActionType">
+              <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+
+              <xs:attribute name="CrashSource" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    ID of a computer that the crash log will point to. NOTE: Players are very likely to rm * entire log
+                    folders, so don't make this part of any critical path - it's almost impossible to find. Secrets
+                    only!
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+
+
+
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType></xs:element>
+
+    <xs:element name="DeleteFile" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Deletes a file from the target computer. Does nothing if that file does not exist.</xs:documentation></xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="tns:DelayableActionType">
+              <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+
+              <xs:attribute name="FilePath" type="xs:string"></xs:attribute>
+
+              <xs:attribute name="FileName" type="xs:string"></xs:attribute>
+
+
+
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType></xs:element>
+
+    <xs:element name="AddConditionalActions" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Loads in a new set of conditional actions from a file.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="tns:DelayableActionType">
+              <xs:attribute name="Filepath" type="xs:string"></xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType></xs:element>
+
+    <xs:element name="SaveGame" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Saves the game! The player should be saved frequently, just incase their power dies or something. If you have extremely long missions without email replies or any other save triggers, use this to keep the player saved and up to date.</xs:documentation></xs:annotation>
+        <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType">
+
+
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+
+    <xs:element name="ShowNode" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Reveals a node on the netmap.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType">
+            <xs:attribute name="Target" type="xs:string"></xs:attribute>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+
+    <xs:element name="HideAllNodes" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Un-reveals all visible nodes from the netmap</xs:documentation></xs:annotation>
+        <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType"></xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+
+    <xs:element name="ChangeIP" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Changes the IP Address of the computer with ID in targetComp to the new IP address provided</xs:documentation></xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="tns:DelayableActionType">
+              <xs:attribute name="NewIP" type="xs:string"></xs:attribute>
+              <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType></xs:element>
+
+    <xs:element name="GivePlayerUserAccount" maxOccurs="unbounded" minOccurs="0">
+      <xs:annotation>
+        <xs:documentation>Reveals this user account to the player so it's details show up in the autocomplete options when the player goes to log in.</xs:documentation></xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType">
+            <xs:attribute name="Username" type="xs:string"></xs:attribute>
+            <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+          </xs:extension>
+        </xs:complexContent>
+        
+      </xs:complexType></xs:element>
+
+    <xs:element name="HideNode" maxOccurs="unbounded" minOccurs="0">
+      <xs:annotation>
+        <xs:documentation>Hides the target computer node from the netmap if it's visible</xs:documentation></xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType">
+            <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+
+    <xs:element name="KillExe" maxOccurs="unbounded" minOccurs="0">
+      <xs:annotation>
+        <xs:documentation>Kills all exes that contain the string mentioned, or * for all.
+This is case insensitive. So the following would kill "SSHCrackExe",but changing it to "s" would kill all exes with an s in their name.
+This is useful for doing things like killing ESequencer.exe once it's running, or having a rival hacker close all of the player's shells.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType">
+            <xs:attribute name="ExeName" type="xs:string"></xs:attribute>
+
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+
+    <xs:element name="AppendToFile" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Appends the content of the tag onto the file specified. Useful for adding extra data into things, making the world feel more dynamic, adding people to whitelists etc.</xs:documentation></xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="tns:DelayableActionType">
+              <xs:attribute name="TargetFilename" type="xs:string"></xs:attribute>
+              <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+              <xs:attribute name="TargetFolderpath" type="xs:string"></xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType></xs:element>
+
+    <xs:element name="CancelScreenBleedEffect" maxOccurs="unbounded" minOccurs="0">
+      <xs:annotation>
+        <xs:documentation>Cancels a screen bleed effect started with the tag above.</xs:documentation></xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType"></xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+
+    <xs:element name="StartScreenBleedEffect" maxOccurs="unbounded" minOccurs="0">
+      <xs:annotation>
+        <xs:documentation>Starts a 'screen bleed' effect! This is where the red line moves down from the top of the screen dramatically.
+The title and the first 3 lines of the content of this tag are what's shown in the bottom left alert window
+
+Note: needs to syncing this up with various other conditions that allow you to cancel the effect if the player completes some task.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType">
+            <xs:attribute name="TotalDurationSeconds" type="xs:float">
+              <xs:annotation>
+                <xs:documentation>total time it takes for the screen bleed to go from top to bottom.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="AlertTitle" type="xs:string"></xs:attribute>
+            <xs:attribute name="CompleteAction" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  run *only if* the red hits the bottom of the screen and the player runs out of time
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+    <xs:element name="SwitchToTheme" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Switches to the listed theme. You can specify any of the core Hacknet themes by name directly :
+TerminalOnlyBlack, HacknetBlue, HacknetTeal, HacknetYellow, HacknetWhite, HacknetPurple, HacknetMint, HackerGreen
+Or you can specify a path to a custom theme file</xs:documentation></xs:annotation>
+        <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType">
+            <xs:attribute name="ThemePathOrName" type="xs:string"></xs:attribute>
+
+            <xs:attribute name="FlickerInDuration" type="xs:string"></xs:attribute>
+
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+
+    <xs:element name="LaunchHackScript" maxOccurs="unbounded" minOccurs="0">
+      <xs:annotation>
+        <xs:documentation>Loads in the Hacker script defined below to execute 5.5 seconds from now, coming from source advExamplePC and targeting playerComp (The player node ID).
+These can target whatever you like, and be ally scripts! </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType">
+            <xs:attribute name="Filepath" type="xs:string"></xs:attribute>
+
+            <xs:attribute name="SourceComp" type="xs:string"></xs:attribute>
+            <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
+            <xs:attribute name="RequireLogsOnSource" type="xs:boolean">
+              <xs:annotation>
+                <xs:documentation>This will only execute if the source comp has logs on it from the player deleting, moving, or copying a file.</xs:documentation>
+              </xs:annotation></xs:attribute>
+            <xs:attribute name="RequireSourceIntact" type="xs:boolean">
+              <xs:annotation>
+                <xs:documentation>If the target is missing it's networking file from /sys, the hack wont happen. This means a crippled computer cant hack you back.</xs:documentation>
+              </xs:annotation></xs:attribute>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+
+    <xs:element name="ChangeAlertIcon" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Changes the alert icon (top right) to point to a new server</xs:documentation></xs:annotation>
+        <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:DelayableActionType">
+            <xs:attribute name="Target" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>ID of the server it should connect to.</xs:documentation></xs:annotation></xs:attribute>
+
+            <xs:attribute name="Type">
+                        <xs:annotation>
+                          <xs:documentation>- mail is a mail server, like Jmail. If you use this, the mail server that it points to MUST HAVE A MAIL ACCOUNT FOR THE PLAYER. If it doesn't, it will crash when the player clicks on the icon and tries to go to their non-existent account.
+- board is a /el style message board. Whenever a message or thread is added that contains any other the above IRC mention strings, the player will be notified.
+- irchub is a DLCHubServer like Labyrinths uses.
+- irc is a standard IRC server. Whenever an IRC log with @#PLAYERNAME# or @Channel in it is added, the player will get a notification.
+
+IMPORTANT NOTE: Changing the type to anything other than mail is only supported with the Hacknet Labyrinths DLC installed. 
+
+
+</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="mail"></xs:enumeration>
+                  <xs:enumeration value="irc"></xs:enumeration>
+                  <xs:enumeration value="irchub"></xs:enumeration>
+                  <xs:enumeration value="board"></xs:enumeration>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType></xs:element>
+      </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DelayableActionType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Delay" type="xs:float"></xs:attribute>
+        <xs:attribute name="DelayHost" type="xs:string"></xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>
