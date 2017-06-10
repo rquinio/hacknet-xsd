@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://hacknet-os.com" targetNamespace="http://hacknet-os.com" elementFormDefault="qualified">
+    <xs:element name="Person">
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="Birthplace">
+            <xs:complexType>
+              <xs:attribute name="name" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>Any string works here, but it's designed to accept a city name.</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Degrees">
+            <xs:annotation>
+              <xs:documentation>Degrees that show up on the academic database.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Degree" maxOccurs="unbounded" minOccurs="0">
+                  <xs:annotation>
+                    <xs:documentation>Name of the degree (ex: Bachelor of Software Engineering)</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:simpleContent>
+                      <xs:extension base="xs:string">
+                        <xs:attribute name="uni" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>University issuing the degree (ex: University of California)</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="gpa" type="xs:float"></xs:attribute>
+
+                      </xs:extension>
+                    </xs:simpleContent>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+
+
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Medical">
+            <xs:annotation>
+              <xs:documentation>Info that shows up in the medical database</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Blood" type="xs:string"></xs:element>
+                <xs:element name="Height" type="xs:int">
+                  <xs:annotation>
+                    <xs:documentation>Height in cm</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:element name="Allergies" type="xs:string">
+                  <xs:annotation>
+                    <xs:documentation>Commas separate allergies</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:element name="Perscription" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+                <xs:element name="Notes" type="xs:string">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Notes show up in the medical record too. You can include IP addresses and passwords etc here if
+                      you want.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="DOB" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Date and time of birth - used in medical records Format is: DD/MM/YYYY HH:MM:S
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Notes" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>These notes are never used in-game, but can be handy to keep track of stuff for your own purposes.</xs:documentation></xs:annotation></xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Not used yet, but may be used in the future for reference stuff.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="handle" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Person's account name for things like PointClicker and neopals</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="firstName" type="xs:string" use="required"></xs:attribute>
+        <xs:attribute name="lastName" type="xs:string" use="required"></xs:attribute>
+        <xs:attribute name="isMale" type="xs:boolean" use="optional"></xs:attribute>
+        <xs:attribute name="forceHasNeopals" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>
+              Try to guarantee person will have a neopals account generated, otherwise it's random.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+
+      </xs:complexType></xs:element>
+</xs:schema>

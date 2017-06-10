@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://hacknet-os.com" targetNamespace="http://hacknet-os.com" elementFormDefault="qualified">
+    <element name="CustomTheme">
+      <complexType>
+        <sequence>
+          <element name="themeLayoutName">
+            <annotation>
+              <documentation>Defines the layout of the windows.</documentation>
+            </annotation>
+            <simpleType>
+              <restriction base="string">
+                <enumeration value="blue"></enumeration>
+                <enumeration value="green"></enumeration>
+                <enumeration value="white"></enumeration>
+                <enumeration value="mint"></enumeration>
+                <enumeration value="greencompact"></enumeration>
+                <enumeration value="riptide"></enumeration>
+                <enumeration value="colamaeleon"></enumeration>
+                <enumeration value="riptide2"></enumeration>
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="backgroundImagePath">
+            <annotation>
+              <documentation>
+                Path to the background image file. It should be 1920x1080, and a .jpg or .png file. If this is left out,
+                the theme will automatically generate a dynamic background for the theme
+              </documentation>
+            </annotation>
+            <simpleType>
+              <restriction base="anyURI">
+                <pattern value=".*(\.png|\.jpg)"></pattern>
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="UseAspectPreserveBackgroundScaling" type="boolean">
+            <annotation>
+              <documentation>
+                If false, the background image will stretch to fill the background area. If true, the background will be
+                drawn aspect ratio correct in the middle of the screen, with the backgroundImageFillColor behind it.
+              </documentation>
+            </annotation>
+          </element>
+          <element name="BackgroundImageFillColor" type="tns:rgbaColorType"></element>
+          <element name="defaultHighlightColor" type="tns:rgbaColorType">
+            <annotation>
+              <documentation>
+                Main Colors - these will define the main feel of the theme Color of nodes on the netmap, and many other
+                derived colors.
+              </documentation>
+            </annotation>
+          </element>
+          <element name="defaultTopBarColor" type="tns:rgbaColorType"></element>
+          <element name="moduleColorSolidDefault" type="tns:rgbaColorType">
+            <annotation>
+              <documentation>Used for the outlines of the module windows</documentation>
+            </annotation>
+          </element>
+          <element name="moduleColorStrong" type="tns:rgbaColorType"></element>
+          <element name="moduleColorBacking" type="tns:rgbaColorType"></element>
+          <element name="exeModuleTopBar" type="tns:rgbaColorType"></element>
+          <element name="exeModuleTitleText" type="tns:rgbaColorType"></element>
+          <element name="warningColor" type="tns:rgbaColorType"></element>
+          <element name="subtleTextColor" type="tns:rgbaColorType"></element>
+          <element name="darkBackgroundColor" type="tns:rgbaColorType"></element>
+          <element name="indentBackgroundColor" type="tns:rgbaColorType"></element>
+          <element name="outlineColor" type="tns:rgbaColorType"></element>
+          <element name="lockedColor" type="tns:rgbaColorType"></element>
+          <element name="brightLockedColor" type="tns:rgbaColorType"></element>
+          <element name="brightUnlockedColor" type="tns:rgbaColorType"></element>
+          <element name="unlockedColor" type="tns:rgbaColorType"></element>
+          <element name="lightGray" type="tns:rgbaColorType"></element>
+          <element name="shellColor" type="tns:rgbaColorType"></element>
+          <element name="shellButtonColor" type="tns:rgbaColorType"></element>
+          <element name="semiTransText" type="tns:rgbaColorType"></element>
+          <element name="terminalTextColor" type="tns:rgbaColorType"></element>
+          <element name="topBarTextColor" type="tns:rgbaColorType"></element>
+          <element name="superLightWhite" type="tns:rgbaColorType"></element>
+          <element name="connectedNodeHighlight" type="tns:rgbaColorType"></element>
+          <element name="netmapToolTipColor" type="tns:rgbaColorType"></element>
+          <element name="netmapToolTipBackground" type="tns:rgbaColorType"></element>
+          <element name="topBarIconsColor" type="tns:rgbaColorType"></element>
+          <element name="thisComputerNode" type="tns:rgbaColorType"></element>
+          <element name="scanlinesColor" type="tns:rgbaColorType"></element>
+          <element name="AFX_KeyboardMiddle" type="tns:rgbColorType">
+            <annotation>
+              <documentation>AlienFX Colors used for Alienware (and other) hardware with variable LED lights that Hacknet can set dynamically</documentation></annotation></element>
+          <element name="AFX_KeyboardOuter" type="tns:rgbColorType"></element>
+          <element name="AFX_WordLogo" type="tns:rgbColorType"></element>
+          <element name="AFX_Other" type="tns:rgbColorType"></element>
+        </sequence>
+      </complexType></element>
+
+    <simpleType name="rgbaColorType">
+      <restriction base="string">
+        <pattern value="\d{0,255},\d{0,255},\d{0,255}(,\d{0,255})?"></pattern>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="rgbColorType">
+      <restriction base="string">
+        <pattern value="\d{0,255},\d{0,255},\d{0,255}"></pattern>
+      </restriction>
+    </simpleType>
+</schema>

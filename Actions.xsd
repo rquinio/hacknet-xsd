@@ -39,7 +39,7 @@
         <xs:annotation>
           <xs:documentation>Immediately loads a mission, replacing whatever's currently there and sending the email</xs:documentation></xs:annotation>
         <xs:complexType>
-        <xs:attribute name="MissionName" type="xs:string"></xs:attribute>
+        <xs:attribute name="MissionName" type="xs:anyURI"></xs:attribute>
       </xs:complexType></xs:element>
 
     <xs:element name="AddAsset" maxOccurs="unbounded" minOccurs="0">
@@ -73,7 +73,7 @@ This is very useful for adding complex files to a server after the session is cr
           <xs:documentation>Adds a new mission to a hub server. This works for both missionHubServer servers (CSEC Style), missionListingServers (Entropy style) and also DHSDaemon servers (Bibliotheque style).</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-        <xs:attribute name="MissionFilepath" type="xs:string"></xs:attribute>
+        <xs:attribute name="MissionFilepath" type="xs:anyURI"></xs:attribute>
         <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
         <xs:attribute name="AssignmentTag" type="xs:string" use="optional">
           <xs:annotation>
@@ -87,7 +87,7 @@ Note that adding a mission to an entropy style server, you can set the Assignmen
           <xs:documentation>Removes the mission from the hub server, if it exists.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-        <xs:attribute name="MissionFilepath" type="xs:string"></xs:attribute>
+        <xs:attribute name="MissionFilepath" type="xs:anyURI"></xs:attribute>
         <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
       </xs:complexType></xs:element>
 
@@ -95,7 +95,7 @@ Note that adding a mission to an entropy style server, you can set the Assignmen
       <xs:annotation>
         <xs:documentation>Adds a thread to a /el message board - thread file should be a UFT-8 plaintext document.</xs:documentation></xs:annotation>
       <xs:complexType>
-        <xs:attribute name="ThreadFilepath" type="xs:string"></xs:attribute>
+        <xs:attribute name="ThreadFilepath" type="xs:anyURI"></xs:attribute>
         <xs:attribute name="TargetComp" type="xs:string"></xs:attribute>
       </xs:complexType></xs:element>
 
@@ -151,7 +151,7 @@ Note that adding a mission to an entropy style server, you can set the Assignmen
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="tns:DelayableActionType">
-              <xs:attribute name="Filepath" type="xs:string"></xs:attribute>
+              <xs:attribute name="Filepath" type="xs:anyURI"></xs:attribute>
             </xs:extension>
           </xs:complexContent>
         </xs:complexType></xs:element>
@@ -278,7 +278,7 @@ Note: needs to syncing this up with various other conditions that allow you to c
               </xs:annotation>
             </xs:attribute>
             <xs:attribute name="AlertTitle" type="xs:string"></xs:attribute>
-            <xs:attribute name="CompleteAction" type="xs:string">
+            <xs:attribute name="CompleteAction" type="xs:anyURI">
               <xs:annotation>
                 <xs:documentation>
                   run *only if* the red hits the bottom of the screen and the player runs out of time
@@ -296,7 +296,7 @@ Or you can specify a path to a custom theme file</xs:documentation></xs:annotati
         <xs:complexType>
         <xs:complexContent>
           <xs:extension base="tns:DelayableActionType">
-            <xs:attribute name="ThemePathOrName" type="xs:string"></xs:attribute>
+            <xs:attribute name="ThemePathOrName" type="xs:anyURI"></xs:attribute>
 
             <xs:attribute name="FlickerInDuration" type="xs:string"></xs:attribute>
 

@@ -1,5 +1,4 @@
 <ConditionalActions xmlns="http://hacknet-os.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://hacknet-os.com ../ConditionalActions.xsd">
-  
   <!-- These groupings describe conditions that need to be met before the actions contained within will trigger
   
   This one is checked when the player connects to the PC with ID in the target field. needsMissionComplete and reqiuredFlags are optional

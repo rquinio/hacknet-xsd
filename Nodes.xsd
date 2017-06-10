@@ -88,9 +88,7 @@ It's generally best practice to only use a single daemon per node, but it does s
         </xs:element>
         <xs:element name="positionNear" type="tns:positionNearType" maxOccurs="1" minOccurs="0">
           <xs:annotation>
-            <xs:documentation>
-              Positions this computer near the target on the network map, to create cool looking networks
-            </xs:documentation>
+            <xs:documentation>Positions this computer near the target on the network map, to create cool looking networks.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="file" type="tns:fileType" maxOccurs="unbounded" minOccurs="0">
@@ -505,7 +503,7 @@ Note: will only work if file name ends with .dec extension.
     <xs:complexType name="customthemefileType">
       <xs:attribute name="path" type="xs:string"></xs:attribute>
       <xs:attribute name="name" type="xs:string"></xs:attribute>
-      <xs:attribute name="themePath" type="xs:string"></xs:attribute>
+      <xs:attribute name="themePath" type="xs:anyURI"></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="MemoryType">
@@ -526,7 +524,7 @@ Note: will only work if file name ends with .dec extension.
 
     <xs:complexType name="ImagesType">
       <xs:sequence>
-        <xs:element name="Image" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="Image" type="xs:anyURI" maxOccurs="unbounded" minOccurs="0"></xs:element>
       </xs:sequence>
     </xs:complexType>
     
@@ -544,9 +542,9 @@ Note: will only work if file name ends with .dec extension.
 
     <xs:complexType name="variableMissionListingServerType">
       <xs:attribute name="name" type="xs:string"></xs:attribute>
-      <xs:attribute name="iconPath" type="xs:string"></xs:attribute>
-      <xs:attribute name="articleFolderPath" type="xs:string"></xs:attribute>
-      <xs:attribute name="color" type="xs:string"></xs:attribute>
+      <xs:attribute name="iconPath" type="xs:anyURI"></xs:attribute>
+      <xs:attribute name="articleFolderPath" type="xs:anyURI"></xs:attribute>
+      <xs:attribute name="color" type="tns:rgbaColorType"></xs:attribute>
       <xs:attribute name="assigner" type="xs:boolean"></xs:attribute>
       <xs:attribute name="public" type="xs:boolean"></xs:attribute>
       <xs:attribute name="title" type="xs:string"></xs:attribute>
@@ -555,10 +553,10 @@ Note: will only work if file name ends with .dec extension.
     <xs:complexType name="missionHubServerType">
       <xs:attribute name="groupName" type="xs:string"></xs:attribute>
       <xs:attribute name="serviceName" type="xs:string"></xs:attribute>
-      <xs:attribute name="missionFolderPath" type="xs:string"></xs:attribute>
-      <xs:attribute name="themeColor" type="xs:string"></xs:attribute>
-      <xs:attribute name="lineColor" type="xs:string"></xs:attribute>
-      <xs:attribute name="backgroundColor" type="xs:string"></xs:attribute>
+      <xs:attribute name="missionFolderPath" type="xs:anyURI"></xs:attribute>
+      <xs:attribute name="themeColor" type="tns:rgbaColorType"></xs:attribute>
+      <xs:attribute name="lineColor" type="tns:rgbaColorType"></xs:attribute>
+      <xs:attribute name="backgroundColor" type="tns:rgbaColorType"></xs:attribute>
       <xs:attribute name="allowAbandon" type="xs:boolean" use="optional"></xs:attribute>
     </xs:complexType>
 
@@ -575,16 +573,18 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
     
     <xs:complexType name="messageBoardType">
       <xs:sequence>
-        <xs:element name="thread" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        <xs:element name="thread" type="xs:anyURI" maxOccurs="unbounded" minOccurs="0"></xs:element>
       </xs:sequence>
-      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Custom Board Name</xs:documentation></xs:annotation></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="uploadServerDaemonType">
       <xs:attribute name="name" type="xs:string"></xs:attribute>
-      <xs:attribute name="folder" type="xs:string"></xs:attribute>
+      <xs:attribute name="folder" type="xs:string" default="Drop/Uploads"></xs:attribute>
       <xs:attribute name="needsAuth" type="xs:boolean"></xs:attribute>
-      <xs:attribute name="color" type="xs:string"></xs:attribute>
+      <xs:attribute name="color" type="tns:rgbaColorType"></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="addWebServerType">
@@ -592,7 +592,7 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
         <xs:annotation>
           <xs:documentation>Label of button to go to web view</xs:documentation>
         </xs:annotation></xs:attribute>
-      <xs:attribute name="url" type="xs:string" use="required">
+      <xs:attribute name="url" type="xs:anyURI" use="required">
         <xs:annotation>
           <xs:documentation>Path to HTML page relative to extension directory. The page will be copied onto the target computer as /web/index.html </xs:documentation>
         </xs:annotation></xs:attribute>
@@ -625,7 +625,7 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
           </xs:annotation></xs:element>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string"></xs:attribute>
-      <xs:attribute name="color" type="xs:string"></xs:attribute>
+      <xs:attribute name="color" type="tns:rgbaColorType"></xs:attribute>
       <xs:attribute name="generateJunk " type="xs:boolean"></xs:attribute>
     </xs:complexType>
 
@@ -651,7 +651,7 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
     <xs:complexType name="CreditsDaemonType">
       <xs:attribute name="Title" type="xs:string"></xs:attribute>
       <xs:attribute name="ButtonText" type="xs:string"></xs:attribute>
-      <xs:attribute name="ConditionalActionSetToRunOnButtonPressPath" type="xs:string"></xs:attribute>
+      <xs:attribute name="ConditionalActionSetToRunOnButtonPressPath" type="xs:anyURI"></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="DHSDaemonType">
@@ -661,7 +661,7 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
       <xs:attribute name="groupName" type="xs:string"></xs:attribute>
       <xs:attribute name="addsFactionPointOnMissionComplete" type="xs:boolean"></xs:attribute>
       <xs:attribute name="autoClearMissionsOnPlayerComplete" type="xs:boolean"></xs:attribute>
-      <xs:attribute name="themeColor" type="xs:string"></xs:attribute>
+      <xs:attribute name="themeColor" type="tns:rgbaColorType"></xs:attribute>
       <xs:attribute name="allowContractAbbandon" type="xs:boolean"></xs:attribute>
     </xs:complexType>
 
@@ -677,7 +677,7 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
           </xs:attribute>
           <xs:attribute name="Name" type="xs:string"></xs:attribute>
           <xs:attribute name="ShowsTitle" type="xs:boolean"></xs:attribute>
-          <xs:attribute name="TextColor" type="xs:string"></xs:attribute>
+          <xs:attribute name="TextColor" type="tns:rgbaColorType"></xs:attribute>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -689,7 +689,7 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
           <xs:annotation>
             <xs:documentation>IRC Message</xs:documentation></xs:annotation></xs:element>
       </xs:sequence>
-      <xs:attribute name="themeColor" type="xs:string"></xs:attribute>
+      <xs:attribute name="themeColor" type="tns:rgbaColorType"></xs:attribute>
       <xs:attribute name="name" type="xs:string"></xs:attribute>
       <xs:attribute name="needsLogin" type="xs:boolean"></xs:attribute>
     </xs:complexType>
@@ -720,29 +720,38 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
             </xs:restriction>
           </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="DataType" type="xs:string">
+        <xs:attribute name="DataType">
           <xs:annotation>
-            <xs:documentation>All basic C# datatypes from .NET
+            <xs:documentation>
+              All basic C# datatypes from .NET
 
-GitCommitEntry
-TextRecord
-OnlineAccount
-CAROData
-Account
+              GitCommitEntry TextRecord OnlineAccount CAROData Account
 
-</xs:documentation>
-          </xs:annotation></xs:attribute>
+            </xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="GitCommitEntry"></xs:enumeration>
+              <xs:enumeration value="TextRecord"></xs:enumeration>
+              <xs:enumeration value="OnlineAccount"></xs:enumeration>
+              <xs:enumeration value="CAROData"></xs:enumeration>
+              <xs:enumeration value="Account"></xs:enumeration>
+              <xs:enumeration value="SurveillanceProfile"></xs:enumeration>
+              <xs:enumeration value="AgentDetails"></xs:enumeration>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="Foldername" type="xs:string" use="optional"></xs:attribute>
-        <xs:attribute name="Color" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="Color" type="tns:rgbaColorType" use="optional"></xs:attribute>
         <xs:attribute name="AdminEmailAccount" type="xs:string" use="optional"></xs:attribute>
         <xs:attribute name="AdminEmailHostID" type="xs:string" use="optional"></xs:attribute>
         <xs:attribute name="Name" type="xs:string"></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="LogoCustomConnectDisplayDaemonType">
-      <xs:attribute name="logo" type="xs:string"></xs:attribute>
+      <xs:attribute name="logo" type="xs:anyURI"></xs:attribute>
       <xs:attribute name="title" type="xs:string"></xs:attribute>
-      <xs:attribute name="overdrawLogo" type="xs:string"></xs:attribute>
+      <xs:attribute name="overdrawLogo" type="xs:boolean"></xs:attribute>
       <xs:attribute name="buttonAlignment">
         <xs:simpleType>
           <xs:restriction base="xs:string">
@@ -757,12 +766,12 @@ Account
     <xs:complexType name="agentType">
       <xs:attribute name="name" type="xs:string"></xs:attribute>
       <xs:attribute name="pass" type="xs:string"></xs:attribute>
-      <xs:attribute name="color" type="xs:string"></xs:attribute>
+      <xs:attribute name="color" type="tns:rgbaColorType"></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="userType">
       <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
-      <xs:attribute name="color" type="xs:string"></xs:attribute>
+      <xs:attribute name="color" type="tns:rgbaColorType"></xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="postType">
@@ -772,4 +781,10 @@ Account
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
+
+    <xs:simpleType name="rgbaColorType">
+      <xs:restriction base="xs:string">
+        <xs:pattern value="\d{0,255},\d{0,255},\d{0,255}(,\d{0,255})?"></xs:pattern>
+      </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

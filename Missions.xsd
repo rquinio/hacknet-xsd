@@ -68,7 +68,12 @@
 
   <xs:complexType name="goalsType">
     <xs:sequence>
-      <xs:element name="goal" type="tns:goalType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      <xs:element name="goal" type="tns:goalType" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Requirement for mission completion.
+
+- filechange: checks for the presence of a file on the target computer at the given path, woth optionally a 'replace' content.</xs:documentation>
+        </xs:annotation></xs:element>
     </xs:sequence>
   </xs:complexType>
 
@@ -97,7 +102,7 @@
       </xs:documentation>
     </xs:annotation>
     <xs:simpleContent>
-      <xs:extension base="xs:string">
+      <xs:extension base="xs:anyURI">
         <xs:attribute name="IsSilent" type="xs:boolean"></xs:attribute>
       </xs:extension>
     </xs:simpleContent>
@@ -105,7 +110,7 @@
 
   <xs:complexType name="branchMissionsType">
     <xs:sequence>
-      <xs:element name="branch" type="xs:string" maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="branch" type="xs:anyURI" maxOccurs="unbounded" minOccurs="0">
         <xs:annotation>
           <xs:documentation>Path to mission file (ex: Missions/BranchExample/TestBranchMission.xml)</xs:documentation>
         </xs:annotation></xs:element>
@@ -162,7 +167,7 @@ Be very conscious about how much you are hinting at and guiding the player, and 
       <xs:attribute name="path" type="xs:string"></xs:attribute>
       <xs:attribute name="keyword" type="xs:string">
         <xs:annotation>
-          <xs:documentation>For filechange type</xs:documentation>
+          <xs:documentation>For filechange type: content to check to be present (or absent if removal = true) in the file.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="caseSensitive" type="xs:boolean">
@@ -172,7 +177,7 @@ Be very conscious about how much you are hinting at and guiding the player, and 
       </xs:attribute>
       <xs:attribute name="removal" type="xs:boolean">
         <xs:annotation>
-          <xs:documentation>For filechange type</xs:documentation>
+          <xs:documentation>For filechange type: if true, will check that keyword is absent from file.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="time" type="xs:float">

@@ -379,7 +379,7 @@ Different users too
  
   <!-- Displays a big logo on the front of the server with optional messages underneath. If you do not provide a logo image path, it'll display
  a fancy loading spinner instead.-->
-  <LogoDaemon Name="Logo Display Test" ShowsTitle="true" TextColor="47, 212, 163, 200" LogoImagePath="Logo1.png">
+  <LogoDaemon Name="Logo Display Test" ShowsTitle="true" TextColor="47,212,163,200" LogoImagePath="Logo1.png">
     Lines
     Here
     Appear under
@@ -422,7 +422,7 @@ Different users too
   <!-- Everything under this line will only work for player that have the Hacknet Labyrinths DLC pack installed! -->
  
   <!-- Creates a bibliotheque (DLC IRC server) style message board. Can be used to inject missions and messages into via the faction system.-->
-  <DHSDaemon groupName="NewFaction Hub" addsFactionPointOnMissionComplete="true" autoClearMissionsOnPlayerComplete="true" themeColor="255, 255, 161" allowContractAbbandon="false">
+  <DHSDaemon groupName="NewFaction Hub" addsFactionPointOnMissionComplete="true" autoClearMissionsOnPlayerComplete="true" themeColor="255,255,161" allowContractAbbandon="false">
     <agent name="Tyson" pass="rockemsockem" color="209,74,48"/>
     <agent name="DependableSkeleton" pass="d832n3msad" color="112,198,255"/>
     <agent name="HA0" pass="kolgateryu" color="58,202,146"/>

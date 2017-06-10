@@ -1,5 +1,4 @@
-<CustomFaction xmlns="http://hacknet-os.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:schemaLocation="http://hacknet-os.com ../Factions.xsd" 
+<CustomFaction xmlns="http://hacknet-os.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hacknet-os.com ../Factions.xsd" 
   name="Example Faction" id="examplefaction" playerVal="0">
   <!-- You can change the starting player value with the playerVal field above. -->
  

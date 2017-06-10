@@ -47,6 +47,11 @@
 
 Note: you can also have the needs mission complete flag on instantly actions</xs:documentation>
       </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="tns:ActionsType"></xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
     </xs:element>
     <xs:element name="DoesNotHaveFlags" maxOccurs="unbounded" minOccurs="0">
                     <xs:annotation>
