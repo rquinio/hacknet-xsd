@@ -8,7 +8,7 @@ The mod logo in the game is hardcoded to be "Logo.png" at the root of the mod (d
         </xs:annotation>
         <xs:complexType>
         <xs:sequence>
-          <xs:element name="Language">
+          <xs:element name="Language" maxOccurs="1" minOccurs="0">
             <xs:simpleType>
               <xs:restriction base="xs:string">
                 <xs:enumeration value="en-us"></xs:enumeration>

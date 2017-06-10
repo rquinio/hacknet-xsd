@@ -267,12 +267,12 @@ Before the reqs and required rank are met, the mission will appear locked.</xs:d
 You can have as many attachments as you want, of any kind, but I recommend keeping the number small whenever possible, so the player can be focused on a single goal, and not be too overwhelmed. </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-        <xs:element name="note" type="tns:noteType" maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="note" type="tns:noteType" maxOccurs="unbounded" minOccurs="0">
           <xs:annotation>
             <xs:documentation>Guide the player! Hacknet missions are very frustrating when the player has too little direction and cant continue.
 Remember that the note space is very small, so text overflow onto new lines happens quickly.</xs:documentation>
           </xs:annotation></xs:element>
-        <xs:element name="link" type="tns:linkType" maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="link" type="tns:linkType" maxOccurs="unbounded" minOccurs="0">
           <xs:annotation>
             <xs:documentation>Links a computer on the netmap</xs:documentation>
           </xs:annotation></xs:element>
@@ -280,7 +280,7 @@ Remember that the note space is very small, so text overflow onto new lines happ
           <xs:annotation>
             <xs:documentation>Scans for the computer, then searches it's accounts for the provided username and password, and adds it to the list of known accounts for auto completion. It's a good way of providing the password to a server.</xs:documentation>
           </xs:annotation></xs:element>
-      </xs:sequence>
+        </xs:sequence>
 
     </xs:complexType>
 
