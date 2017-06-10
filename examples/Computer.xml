@@ -486,7 +486,6 @@ Different users too
        
    -->
   <DatabaseDaemon Permissions="private" DataType="GitCommitEntry" Foldername="database" Color="85,0,150" AdminEmailAccount="Matt@TestExtensionMail.com" AdminEmailHostID="advExamplePC" Name="Test database">
- 
     <GitCommitEntry>
       <EntryNumber>8613</EntryNumber>
       <ChangedFiles>

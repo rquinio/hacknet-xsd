@@ -86,7 +86,7 @@ It's generally best practice to only use a single daemon per node, but it does s
             </xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element name="positionNear" type="tns:positionNearType" maxOccurs="1" minOccurs="0">
+        <xs:element name="positionNear" type="tns:positionNearType" maxOccurs="unbounded" minOccurs="0">
           <xs:annotation>
             <xs:documentation>Positions this computer near the target on the network map, to create cool looking networks.</xs:documentation>
           </xs:annotation>
@@ -372,10 +372,14 @@ MISSIONLIST = 3; (for mission listing server accounts)
           <xs:enumeration value="1"></xs:enumeration>
           <xs:enumeration value="2"></xs:enumeration>
           <xs:enumeration value="3"></xs:enumeration>
+          <xs:enumeration value="all"></xs:enumeration>
+          <xs:enumeration value="admin"></xs:enumeration>
+          <xs:enumeration value="mail"></xs:enumeration>
+          <xs:enumeration value="missionlist"></xs:enumeration>
           <xs:enumeration value="ALL"></xs:enumeration>
           <xs:enumeration value="ADMIN"></xs:enumeration>
-          <xs:enumeration value="MAIL"></xs:enumeration>
           <xs:enumeration value="MISSIONLIST"></xs:enumeration>
+          <xs:enumeration value="MAIL"></xs:enumeration>
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
@@ -401,7 +405,7 @@ MISSIONLIST = 3; (for mission listing server accounts)
   </xs:complexType>
 
   <xs:complexType name="traceType">
-      <xs:attribute name="time" type="xs:int">
+      <xs:attribute name="time" type="xs:float">
         <xs:annotation>
           <xs:documentation>Set to -1 to remove</xs:documentation>
         </xs:annotation></xs:attribute>
@@ -467,7 +471,7 @@ For general computers, it's best practice to use a progress admin, unless you wa
         <xs:simpleContent>
       <xs:extension base="xs:string">
         <xs:attribute name="path" type="xs:string"></xs:attribute>
-      <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
        </xs:extension>
     </xs:simpleContent>
     </xs:complexType>
@@ -708,9 +712,84 @@ If they are killed, it will add the flag PatientID:DEAD</xs:documentation>
     </xs:complexType>
 
     <xs:complexType name="DatabaseDaemonType">
-        <xs:sequence>
-          <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"></xs:any>
-        </xs:sequence>
+        <xs:choice>
+          <xs:element name="GitCommitEntry" maxOccurs="unbounded" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="EntryNumber" type="xs:string"></xs:element>
+                <xs:element name="ChangedFiles">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="String" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+                    </xs:sequence>
+                  </xs:complexType></xs:element>
+                <xs:element name="Message" type="xs:string"></xs:element>
+                <xs:element name="UserName" type="xs:string"></xs:element>
+                <xs:element name="SourceIP" type="xs:string"></xs:element>
+              </xs:sequence>
+            </xs:complexType></xs:element>
+          <xs:element name="TextRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Title" type="xs:string"></xs:element>
+                <xs:element name="Data" type="xs:string"></xs:element>
+              </xs:sequence>
+            </xs:complexType></xs:element>
+          <xs:element name="OnlineAccount">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ID" type="xs:string"></xs:element>
+                <xs:element name="Username" type="xs:string"></xs:element>
+                <xs:element name="BanStatus" type="xs:string"></xs:element>
+                <xs:element name="Notes" type="xs:string"></xs:element>
+              </xs:sequence>
+            </xs:complexType></xs:element>
+          <xs:element name="CAROData">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="UserID" type="xs:string"></xs:element>
+                <xs:element name="Headshots" type="xs:string"></xs:element>
+                <xs:element name="Kills" type="xs:string"></xs:element>
+                <xs:element name="Rank" type="xs:string"></xs:element>
+                <xs:element name="Crowbars" type="xs:string"></xs:element>
+                <xs:element name="InventoryID" type="xs:string"></xs:element>
+                <xs:element name="BanStatus" type="xs:string"></xs:element>
+              </xs:sequence>
+            </xs:complexType></xs:element>
+          <xs:element name="Account">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ID" type="xs:string"></xs:element>
+                <xs:element name="Cash" type="xs:string"></xs:element>
+                <xs:element name="Bank" type="xs:string"></xs:element>
+                <xs:element name="Apartments" type="xs:string"></xs:element>
+                <xs:element name="Vehicles" type="xs:string"></xs:element>
+                <xs:element name="PegasusVehicles" type="xs:string"></xs:element>
+                <xs:element name="Rank" type="xs:string"></xs:element>
+                <xs:element name="RP" type="xs:string"></xs:element>
+                <xs:element name="Kills" type="xs:string"></xs:element>
+              </xs:sequence>
+            </xs:complexType></xs:element>
+          <xs:element name="SurveillanceProfile">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Name" type="xs:string"></xs:element>
+                <xs:element name="Age" type="xs:string"></xs:element>
+                <xs:element name="HomeCity" type="xs:string"></xs:element>
+                <xs:element name="Notes" type="xs:string"></xs:element>
+                <xs:element name="CriminalRecord" type="xs:string"></xs:element>
+              </xs:sequence>
+            </xs:complexType></xs:element>
+          <xs:element name="AgentDetails">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Codename" type="xs:string"></xs:element>
+                <xs:element name="RealName" type="xs:string"></xs:element>
+                <xs:element name="IP" type="xs:string"></xs:element>
+                <xs:element name="SpecialNotes" type="xs:string"></xs:element>
+              </xs:sequence>
+            </xs:complexType></xs:element>
+        </xs:choice>
         <xs:attribute name="Permissions">
           <xs:simpleType>
             <xs:restriction base="xs:string">
