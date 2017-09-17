@@ -76,15 +76,20 @@ The mod logo in the game is hardcoded to be "Logo.png" at the root of the mod (d
           </xs:element>
           <xs:element name="StartingTheme" type="xs:string">
             <xs:annotation>
-              <xs:documentation>Ex: Themes/ExampleTheme.xml</xs:documentation>
+              <!-- UNSURE: Should I add a note about a bug on some setups that needs the StartingTheme to be in the x-server.sys
+              file too, else it boots up with the base theme which has the same layout as the one specified? -->
+              <xs:documentation>
+                Ex: Themes/ExampleTheme.xml
+                You can also reference themes by name from the original game (ex: TerminalOnlyBlack, HacknetBlue,
+                HacknetTeal, HacknetYellow, HackerGreen, HacknetWhite, HacknetPurple, HacknetMint).
+              </xs:documentation>
             </xs:annotation>
           </xs:element>
           <xs:element name="IntroStartupSong" type="xs:string">
             <xs:annotation>
               <xs:documentation>
                 To Play your own songs, use the path to that song in your extension. (ex: "Music/Chemical_Burns.ogg").
-                You can also reference songs by name from the original game (ex: TerminalOnlyBlack, HacknetBlue,
-                HacknetTeal, HacknetYellow, HackerGreen, HacknetWhite, HacknetPurple, HacknetMint).
+                You can also reference songs by name from the original game (ex: The_Quickening, Revolve)
               </xs:documentation>
             </xs:annotation>
           </xs:element>
@@ -102,11 +107,6 @@ The mod logo in the game is hardcoded to be "Logo.png" at the root of the mod (d
                 After SequencerSpinUpTime seconds have passed, the player will automatically discover and be connected
                 to the computer SequencerTargetID.
 
-                The action defined here runs as soon as the button is pressed, not once it's finished spinning up! This
-                is so you can do setup stuff while it loads, and if you want, start your transitions etc a half second
-                early, or whatever. Remember to delay any relevant actions in the set specified by the song intro you
-                define! In this case, I'm having the theme switch etc delayed by 10.5 seconds to account for the
-                sequencer spinup time.-->
               </xs:documentation>
             </xs:annotation>
           </xs:element>
@@ -120,7 +120,14 @@ The mod logo in the game is hardcoded to be "Logo.png" at the root of the mod (d
           </xs:element>
           <xs:element name="ActionsToRunOnSequencerStart" type="xs:anyURI" maxOccurs="1" minOccurs="0">
             <xs:annotation>
-              <xs:documentation>Conditional action file run after the sequencer activates.</xs:documentation>
+              <xs:documentation>
+                Conditional action file run after the sequencer activates.
+                The action defined here runs as soon as the button is pressed, not once it's finished spinning up! This
+                is so you can do setup stuff while it loads, and if you want, start your transitions etc a half second
+                early, or whatever. Remember to delay any relevant actions in the set specified by the spin up time you
+                define! In this case, I'm having the theme switch etc delayed by 10.5 seconds to account for the
+                sequencer spinup time.
+              </xs:documentation>
             </xs:annotation>
           </xs:element>
           <xs:element name="WorkshopDescription">
